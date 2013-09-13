@@ -19,12 +19,20 @@ Replacement for Elgg's core autocomplete and userpicker
 
 ## Notes ##
 
-jquery.tokeninput's default behavior is to implode values with a comma.
-'action', 'all' plugin hook will attempt explode these values
-and pass the input as an array for further processing.
-If you working with more complex forms, e.g. where name="field_name[element_name]",
-you will need to add some custom logic in your action
+### I/O ###
+Default behavior of the JS plugin is to implode user input into a comma-separated string.
+PHP plugin hook for 'action', 'all' will attempt to explode these values
+and feed them back into an action for further processing. This however,
+will only work with basic form input names, e.g. ```name="field_name"```
+If you are working with more complex forms, where e.g. ```name="field_name[element_name]"```,
+you will need to add some custom logic to your action.
 
+### AJAX requests ###
+To initialize a tokeninput upon successfull AJAX request, use
+``` $('.elgg-input-tokeninput').trigger('initialize'); ```
+
+
+## Examples ###
 
 ### Example 1 ###
 
