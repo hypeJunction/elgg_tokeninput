@@ -8,8 +8,10 @@ Replacement for Elgg's core autocomplete and userpicker
 ## Features ##
 
 * Integrates jquery.tokeninput to create user-friendly autocomplete / userpicker inputs
+* Autocomplete entity and tag input fields
 * Can be easily extended to create autocomplete inputs with custom search logic
 * Allows single as well as multiple values
+* Allow free tag input
 
 
 ## Attributions / Credits ##
@@ -31,6 +33,15 @@ you will need to add some custom logic to your action.
 To initialize a tokeninput upon successfull AJAX request, use
 ``` $('.elgg-input-tokeninput').trigger('initialize'); ```
 
+### Results and Token Format ###
+
+#### Server Side ####
+Use ```'tokeninput:entity:export', $entity_type``` plugin hook to modify json output.
+You can add 'html_result' and 'html_token' parameters to customize the output.
+
+#### Client Side ####
+Use ```'results:formatter', 'tokeninput'``` and ```'results:formatter', 'tokeninput'```
+hooks.
 
 ## Examples ###
 

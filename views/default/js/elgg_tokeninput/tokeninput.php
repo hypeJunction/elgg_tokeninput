@@ -10,7 +10,7 @@
 			method: 'POST',
 			queryParam: 'term',
 			searchDelay: 300,
-			minChars: 1,
+			minChars: 0,
 			propertyToSearch: 'label',
 			preventDuplicates: true,
 			hintText: elgg.echo('tokeninput:text:hint'),
@@ -20,8 +20,9 @@
 			resultsLimit: 10,
 			tokenLimit: null,
 			resultsFormatter: elgg.tokeninput.resultsFormatter,
-//		tokenFormatter: elgg.tokeninput.tokenFormatter,
-			tokenValue: 'value'
+			tokenFormatter: elgg.tokeninput.tokenFormatter,
+			tokenValue: 'value',
+			escapeHTML: false,
 		}
 
 		$('.elgg-input-tokeninput').live('initialize', elgg.tokeninput.initInput);
@@ -39,16 +40,41 @@
 
 		var params = $.extend(true, {}, elgg.tokeninput.config);
 		$.extend(params, $input.data());
-	
-		$input.tokenInput($input.attr('href'), params);
+
+		$input.tokenInput($input.data('href'), params);
+
 	}
 
 	elgg.tokeninput.resultsFormatter = function(item) {
-		var html = '<li><div class="elgg-image-block elgg-tokeninput-suggestion"><div class="elgg-image">' + item.icon + '</div><div class="elgg-body">' + item.label + '<br /><span class="elgg-subtext">' + ((item.metadata) ? item.metadata : '') + '</span></div></div></li>';
+
+		var html = (item.html_result) ? '<li>' + item.html_result + '</li>' :
+				'<li><div class="elgg-image-block elgg-tokeninput-suggestion">\n\
+					<div class="elgg-image">' + ((item.icon) ? item.icon : '') + '</div>\n\
+					<div class="elgg-body">' + ((item.label) ? item.label : '') + '<br />\n\
+						<span class="elgg-subtext">' + ((item.metadata) ? item.metadata : '') + '</span>\n\
+					</div>\n\
+			</div></li>';
+
+		html = elgg.trigger_hook('results:formatter', 'tokeninput', {item: item}, html);
+
+		return html;
+	}
+
+	elgg.tokeninput.tokenFormatter = function(item) {
+		
+		var html = (item.html_token) ? '<li><p>' + item.html_token + '</p></li>' :
+				'<li><p><div class="elgg-image-block elgg-tokeninput-token">\n\
+					<div class="elgg-image">' + ((item.icon) ? item.icon : '') + '</div>\n\
+					<div class="elgg-body">' + ((item.label) ? item.label : '') + '</div>\n\
+			</div></p></li>';
+
+		html = elgg.trigger_hook('results:formatter', 'tokeninput', {item: item}, html);
+
 		return html;
 	}
 
 	elgg.register_hook_handler('init', 'system', elgg.tokeninput.init);
+
 
 <?php if (FALSE) : ?></script><?php
 endif;

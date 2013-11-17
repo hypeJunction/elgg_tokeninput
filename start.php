@@ -52,20 +52,37 @@ function elgg_tokeninput_page_handler($page) {
 	elgg_load_library('elgg.tokeninput');
 
 	$user = elgg_get_logged_in_user_entity();
-	$callback = get_input('callback', 'elgg_tokeninput_search_all');
-	$q = get_input('term', get_input('q'));
 
-	if (!$user || !is_callable($callback) || !$q)
+	$callback = get_input('callback', 'elgg_tokeninput_search_all');
+	$q = get_input('term', get_input('q', ''));
+	$strict = (bool) get_input('strict', true);
+
+	if (!is_callable($callback))
 		exit;
+
+
+	$results = array();
 
 	$entities = call_user_func($callback, $q);
 
 	if ($entities) {
 		foreach ($entities as $entity) {
-			$results[] = elgg_tokeninput_export_entity($entity);
+			if (elgg_instanceof($entity)) {
+				$results[] = elgg_tokeninput_export_entity($entity);
+			} else if ($entity instanceof ElggMetadata) {
+				$results[] = elgg_tokeninput_export_metadata($entity);
+			} else {
+				$results[] = (array) $entity;
+			}
 		}
-	} else {
-		$results = array();
+	} else if ($strict === false) {
+		$suggest = array(
+			'label' => $q,
+			'value' => $q,
+			'html_result' => '<span>' . elgg_echo('tokeninput:suggest', array($q)) . '</span>'
+		);
+
+		$results[] = $suggest;
 	}
 
 	header("Content-Type: application/json");

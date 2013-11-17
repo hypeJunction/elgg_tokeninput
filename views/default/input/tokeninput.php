@@ -8,11 +8,14 @@
  * 
  * @uses $vars['class'] Optional. Additional CSS class
  * @uses $vars['name'] Input name
- * @uses $vars['value'] Current value (a guid, an array of guids or an array of entities)
+ * @uses $vars['value'] Current value (a guid, an array of guids or an array of entities or an array of tags)
  * @uses $vars['multiple'] Allow multipe inputs
  *
  * @uses $vars['callback'] Callback function used to perform the search
- * @uses $vars['query'] Additional options to be passed as query elements
+ * @uses $vars['query'] Additional options to be passed as key-value parameters with the URL query
+ *
+ * @uses $vars['strict'] Toggle strict mode. If set to false, free input mode will be enabled and user will be given an option to add an arbitrary value, if no matching records found
+ *
  */
 $vars['id'] = substr(md5(microtime() . rand()), 0, 10);
 
@@ -44,11 +47,11 @@ if ($value && !is_array($value)) {
 foreach ($value as $selected) {
 	$values[] = elgg_tokeninput_export_entity($selected);
 }
+
 $vars['data-pre-populate'] = ($values) ? json_encode($values) : '[]';
 
 // Limit number of possible values
 $vars['data-token-limit'] = (!$vars['multiple']) ? 1 : null;
-
 
 // Prepare query
 if (isset($vars['query'])) {
@@ -62,12 +65,18 @@ if ($query && !is_array($query)) {
 	$query = array();
 }
 
+// Add strict mode value to the URL query
+$strict = elgg_extract('strict', $vars, true);
+$query['strict'] = $strict;
+$vars['data-allow-free-tagging'] = !$strict;
+unset($vars['strict']);
+
 if (isset($vars['callback'])) {
 	$query['callback'] = $vars['callback'];
 	unset($vars['callback']);
 }
 
-$vars['href'] = elgg_http_add_url_query_elements(elgg_normalize_url(ELGG_TOKENINPUT_PAGEHANDLER), $query);
+$vars['data-href'] = elgg_http_add_url_query_elements(elgg_normalize_url(ELGG_TOKENINPUT_PAGEHANDLER), $query);
 
 $attributes = elgg_format_attributes($vars);
 
