@@ -253,9 +253,7 @@ function elgg_tokeninput_search_tags($term, $options = array()) {
 	$q = str_replace(array('_', '%'), array('\_', '\%'), $term);
 
 	$valid_tag_names = elgg_get_registered_tag_metadata_names();
-	$tag_names = get_input('tag_names');
-
-	error_log(print_r($tag_names, true));
+	$tag_names = urldecode(get_input('tag_names', ''));
 
 	if ($tag_names) {
 		if (is_array($tag_names)) {

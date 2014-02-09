@@ -53,7 +53,7 @@ function elgg_tokeninput_page_handler($page) {
 
 	$user = elgg_get_logged_in_user_entity();
 
-	$callback = get_input('callback', 'elgg_tokeninput_search_all');
+	$callback = urldecode(get_input('callback', 'elgg_tokeninput_search_all'));
 	$q = get_input('term', get_input('q', ''));
 	$strict = (bool) get_input('strict', true);
 
