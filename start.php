@@ -54,7 +54,7 @@ function elgg_tokeninput_page_handler($page) {
 	$user = elgg_get_logged_in_user_entity();
 
 	$callback = urldecode(get_input('callback', 'elgg_tokeninput_search_all'));
-	$q = get_input('term', get_input('q', ''));
+	$q = urldecode(get_input('term', get_input('q', '')));
 	$strict = (bool) get_input('strict', true);
 
 	if (!is_callable($callback))
