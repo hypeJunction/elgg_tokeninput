@@ -345,11 +345,13 @@ $.TokenList = function (input, url_or_data, settings) {
                     hidden_input.change();
                   } else {
                     if ($(input).data("settings").allowFreeTagging) {
-                      if($(input).data("settings").allowTabOut && $(this).val() === "") {
-                        return true;
-                      } else {
-                        add_freetagging_tokens();
-                      }
+                      if ($(input).data("settings").allowTabOut && $(this).val() === "") {
+							return true;
+						} else if (event.keyCode !== KEY.COMMA || $(input).data("settings").tokenDelimiter === ",") {
+							add_freetagging_tokens();
+						} else {
+							return true;
+						}
                     } else {
                       $(this).val("");
                       if($(input).data("settings").allowTabOut) {
