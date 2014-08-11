@@ -49,11 +49,11 @@ hooks.
 
 ### Example 1 ###
 
-#### Create an input that would allow users to search and select multiple files to be
-attached to an entity: ####
+*Create an input that would allow users to search and select multiple files to be attached to an entity:*
 
 Add an input to the form:
-```
+
+```php
 echo elgg_view('input/tokeninput', array(
 		'value' => $current_attachment_guids, // An array of values (guids or entities) to pre-populate the input with
 		'name' => 'attachment_guids',
@@ -64,7 +64,8 @@ echo elgg_view('input/tokeninput', array(
 ```
 
 Add a callback function:
-```
+
+```php
 function my_search_files_callback($query, $options = array()) {
 
 	$user = elgg_get_logged_in_user_entity();
@@ -95,7 +96,8 @@ function my_search_files_callback($query, $options = array()) {
 ```
 
 In your action file:
-```
+
+```php
 $attachment_guids = get_input('attachment_guids');
 if (is_string($attachment_guids)) {
 	$attachment_guids = explode(',', $attachment_guids);
