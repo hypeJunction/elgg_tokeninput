@@ -1,0 +1,19 @@
+{
+	"name": "hypejunction/cmp-lists",
+	"repository": "hypeJunction/cmp-lists",
+	"description": "List manipulation classes",
+	"homepage": "http://hypejunction.com",
+	"keywords": [
+		"classes", "lists"
+	],
+	"license": "GPL-2.0",
+	"authors": [
+		{
+			"name": "Ismayil Khayredinov",
+			"email": "ismayil.khayredinov@gmail.com"
+		}
+	],
+	"autoload": {
+        "psr-4": {"hypeJunction\\": "classes/"}
+    }
+}

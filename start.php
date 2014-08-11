@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/vendors/autoload.php';
+
 define('ELGG_TOKENINPUT_PAGEHANDLER', 'tokeninput');
 
 elgg_register_event_handler('init', 'system', 'elgg_tokeninput_init');
@@ -11,13 +13,15 @@ function elgg_tokeninput_init() {
 
 	elgg_register_library('elgg.tokeninput', elgg_get_plugins_path() . 'elgg_tokeninput/lib/tokeninput.php');
 
-	elgg_register_js('jquery.tokeninput.js', '/mod/elgg_tokeninput/vendors/jquery-tokeninput/src/jquery.tokeninput.js');
+	elgg_define_js('jquery.tokeninput', array(
+		'src' => 'mod/elgg_tokeninput/vendors/jquery-tokeninput/build/jquery.tokeninput.min.js',
+		'deps' => array('jquery'),
+	));
 
-	elgg_register_simplecache_view('js/elgg_tokeninput/tokeninput');
-	elgg_register_js('elgg.tokeninput.js', elgg_get_simplecache_url('js', 'elgg_tokeninput/tokeninput'));
+	elgg_require_js('tokeninput/init');
 
-	elgg_register_simplecache_view('css/elgg_tokeninput/tokeninput');
-	elgg_register_css('elgg.tokeninput.css', elgg_get_simplecache_url('css', 'elgg_tokeninput/tokeninput'));
+	elgg_extend_view('css/elgg', 'css/tokeninput/stylesheet.css');
+	elgg_extend_view('css/admin', 'css/tokeninput/stylesheet.css');
 
 	elgg_register_plugin_hook_handler('action', 'all', 'elgg_tokeninput_explode_field_values', 1);
 
@@ -57,9 +61,9 @@ function elgg_tokeninput_page_handler($page) {
 	$q = urldecode(get_input('term', get_input('q', '')));
 	$strict = (bool) get_input('strict', true);
 
-	if (!is_callable($callback))
+	if (!is_callable($callback)) {
 		exit;
-
+	}
 
 	$results = array();
 
@@ -75,7 +79,9 @@ function elgg_tokeninput_page_handler($page) {
 				$results[] = (array) $entity;
 			}
 		}
-	} else if ($strict === false) {
+	}
+	
+	if (!count($results) && $strict === false) {
 		$suggest = array(
 			'label' => $q,
 			'value' => $q,

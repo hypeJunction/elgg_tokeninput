@@ -1,0 +1,154 @@
+@import "compass/css3"; // compass css3 helpers
+
+@import "variables";
+
+
+ul.token-input-list {
+	overflow: hidden;
+	height: auto !important;
+	height: 1%;
+	width: 100%;
+	border: 1px solid $border-color;
+	cursor: text;
+	font-size: 14px;
+	z-index: 999;
+	margin: 0;
+	padding: 0;
+	background-color: #fff;
+	list-style-type: none;
+	clear: left;
+	@include box-sizing(border-box);
+	li {
+		list-style-type: none;
+		input,
+		input:focus {
+			border: 1px solid transparent;
+			margin: 0;
+			height: auto;
+			width: 100% !important;
+			@include box-shadow(none);
+			background-color: #fff;
+			-webkit-appearance: caret;
+		}
+		&.token-input-token {
+			overflow: hidden;
+			height: auto !important;
+			margin: 3px;
+			padding: 3px 5px;
+			background-color: darken($body-bg, 2%);
+			color: $body-font-color;
+			font-weight: bold;
+			cursor: default;
+			display: block;
+
+			p {
+				float: left;
+				padding: 0;
+				margin: 0;
+				font-size: 14px;
+				line-height: 18px;
+			}
+
+			span {
+				float: right;
+				color: $body-font-color;
+				cursor: pointer;
+			}
+
+		}
+		&.token-input-selected-token {
+			background-color: darken($body-bg, 5%);
+			color: darken($body-font-color, 5%);
+			span {
+				font-weight: bold;
+			}
+		}
+
+	}
+	&.token-input-disabled {
+		li.token-input-token {
+			background-color: $body-bg;
+			color: $body-font-color;
+		}
+	}
+	.elgg-image-block.elgg-tokeninput-token {
+		float: left;
+		width: 95%;
+		.elgg-body {
+			padding: 4px 0 3px 0;
+			font-size: 14px;
+			line-height: 18px;
+			font-weight: normal;
+		}
+		.elgg-image,
+		.elgg-image img {
+			max-width: 25px;
+			max-height: 25px;
+			height: auto;
+			overflow: hidden;
+		}
+	}
+}
+
+div.token-input-dropdown {
+	position: absolute;
+	width: 100%;
+	background-color: #fff;
+	overflow: hidden;
+	border-left: 1px solid $border-color;
+	border-right: 1px solid $border-color;
+	border-bottom: 1px solid $border-color;
+	cursor: default;
+	font-size: emCalc(12px);
+	z-index: 1;
+	@include box-sizing(border-box);
+
+
+	p {
+		margin: 0;
+		padding: 5px;
+		font-size: 14px;
+		line-height: 18px;
+		color: $body-font-color;
+	}
+
+	ul {
+		margin: 0;
+		padding: 0;
+
+		li {
+			background-color: #fff;
+			padding: 3px;
+			font-size: 14px;
+			font-weight: normal;
+			list-style-type: none;
+			&.token-input-dropdown-item {
+				background-color: darken($body-bg, 2%);
+			}
+			&.token-input-dropdown-item2 {
+				background-color: #fff;
+			}
+			&.token-input-selected-dropdown-item {
+				background-color: darken($body-bg, 5%);
+				color: darken($body-font-color, 5%);
+			}
+			em {
+				font-weight: normal;
+				font-style: normal;
+			}
+		}
+	}
+	.elgg-tokeninput-suggestion {
+		margin:3px;
+		.elgg-tokeninput-suggestion .elgg-image {
+			margin-right:10px;
+		}
+		.elgg-image,
+		.elgg-image img {
+			max-width: 25px;
+			max-height: 25px;
+			height: auto;
+			overflow: hidden;
+		}
+	}
+}

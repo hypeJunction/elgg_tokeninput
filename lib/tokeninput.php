@@ -139,13 +139,9 @@ function elgg_tokeninput_search_users($term, $options = array()) {
 	// replace mysql vars with escaped strings
 	$q = str_replace(array('_', '%'), array('\_', '\%'), $term);
 
-	$dbprefix = elgg_get_config('dbprefix');
-
-	$options['types'] = array('user');
-	$options['joins'][] = "JOIN {$dbprefix}users_entity ue ON ue.guid = e.guid";
-	$options['wheres'][] = "ue.banned = 'no' AND (ue.name LIKE '%$q%' OR ue.username LIKE '%$q%')";
-	
-	return elgg_get_entities($options);
+	$list = new hypeJunction\Lists\ElggList($options);
+	$list->setSearchQuery(array('user' => $q));
+	return $list->getItems();
 }
 
 /**
@@ -162,13 +158,9 @@ function elgg_tokeninput_search_groups($term, $options = array()) {
 	// replace mysql vars with escaped strings
 	$q = str_replace(array('_', '%'), array('\_', '\%'), $term);
 
-	$dbprefix = elgg_get_config('dbprefix');
-
-	$options['types'] = array('group');
-	$options['joins'][] = "JOIN {$dbprefix}groups_entity ge ON ge.guid = e.guid";
-	$options['wheres'][] = "ge.name LIKE '%$q%'";
-
-	return elgg_get_entities($options);
+	$list = new hypeJunction\Lists\ElggList($options);
+	$list->setSearchQuery(array('group' => $q));
+	return $list->getItems();
 }
 
 /**
@@ -185,16 +177,13 @@ function elgg_tokeninput_search_friends($term, $options = array()) {
 	// replace mysql vars with escaped strings
 	$q = str_replace(array('_', '%'), array('\_', '\%'), $term);
 
-	$dbprefix = elgg_get_config('dbprefix');
-
-	$options['types'] = array('user');
 	$options['relationship'] = 'friend';
 	$options['relationship_guid'] = elgg_get_logged_in_user_guid();
 	$options['inverse_relationship'] = false;
-	$options['joins'][] = "JOIN {$dbprefix}users_entity ue ON ue.guid = e.guid";
-	$options['wheres'][] = "ue.banned = 'no' AND (ue.name LIKE '%$q%' OR ue.username LIKE '%$q%')";
 
-	return elgg_get_entities_from_relationship($options);
+	$list = new hypeJunction\Lists\ElggList($options, 'elgg_get_entities_from_relationship');
+	$list->setSearchQuery(array('user' => $q));
+	return $list->getItems();
 }
 
 /**
@@ -217,8 +206,9 @@ function elgg_tokeninput_search_owned_entities($term, $options = array()) {
 	$subtypes = array(0);
 	foreach ($entities['object'] as $subtype) {
 		$subtype_id = get_subtype_id('object', $subtype);
-		if ($subtype_id)
+		if ($subtype_id) {
 			$subtypes[] = $subtype_id;
+		}
 	}
 
 	$subtypes_in = implode(',', $subtypes);
