@@ -4,6 +4,8 @@ elgg_tokeninput
 Tokenizing Autocomplete Inputs
 Replacement for Elgg's core autocomplete and userpicker
 
+## Screenshots ##
+![alt text](https://raw.github.com/hypeJunction/elgg_tokeninput/master/screenshots/tokeninput.png "Tokeninput")
 
 ## Features ##
 
@@ -104,7 +106,3 @@ if (is_array($attachment_guids)) {
 	}
 }
 ```
-
-## Screenshots ##
-![alt text](https://raw.github.com/hypeJunction/elgg_tokeninput/master/screenshots/autocomplete.png "Autocomplete")
-![alt text](https://raw.github.com/hypeJunction/elgg_tokeninput/master/screenshots/userpicker.png "Userpicker")
