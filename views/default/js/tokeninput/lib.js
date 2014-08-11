@@ -38,7 +38,6 @@ define(['elgg', 'jquery', 'jquery.tokeninput'], function(elgg, $) {
 		 */
 		initInput: function() {
 			var $input = $(this);
-			console.log(tokeninput.config);
 			var params = $.extend(true, {}, tokeninput.config());
 			$.extend(params, $input.data());
 			$input.tokenInput($input.data('href'), params);
@@ -50,7 +49,6 @@ define(['elgg', 'jquery', 'jquery.tokeninput'], function(elgg, $) {
 		 * @returns {String|Bool|@var;value|Object}
 		 */
 		resultsFormatter: function(item) {
-			console.log(item);
 			var html = (item.html_result) ? '<li>' + item.html_result + '</li>' :
 					'<li><div class="elgg-image-block elgg-tokeninput-suggestion">\n\
 					<div class="elgg-image">' + ((item.icon) ? item.icon : '') + '</div>\n\
