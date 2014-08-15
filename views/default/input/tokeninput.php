@@ -42,22 +42,19 @@ $vars['type'] = 'text';
 
 // Prepare values
 $value = elgg_extract('value', $vars, array());
-if ($value && !is_array($value)) {
-	$value = array($value);
+if ($value) {
+	if (is_string($value)) {
+		$delimiter = elgg_extract('data-token-delimiter', $vars, ',');
+		$value = explode($delimiter, $value);
+	}
+} else {
+	$value = array();
 }
+
 foreach ($value as $selected) {
 	$values[] = elgg_tokeninput_export_entity($selected);
 }
-
-$delimiter = elgg_extract('data-token-delimiter', $vars, ',');
-if ($values) {
-	if (is_string($values)) {
-		$values = explode($delimiter, $values);
-	}
-	$vars['data-pre-populate'] = json_encode($values);
-} else {
-	$vars['data-pre-populate'] = '[]';
-}
+$vars['data-pre-populate'] = json_encode($values);
 
 // Limit number of possible values
 if (isset($vars['limit'])) {
