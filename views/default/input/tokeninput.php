@@ -10,6 +10,7 @@
  * @uses $vars['name'] Input name
  * @uses $vars['value'] Current value (a guid, an array of guids or an array of entities or an array of tags)
  * @uses $vars['multiple'] Allow multipe inputs
+ * @uess $vars['limit'] Limit number of tokens to a certain value
  *
  * @uses $vars['callback'] Callback function used to perform the search
  * @uses $vars['query'] Additional options to be passed as key-value parameters with the URL query
@@ -48,10 +49,22 @@ foreach ($value as $selected) {
 	$values[] = elgg_tokeninput_export_entity($selected);
 }
 
-$vars['data-pre-populate'] = ($values) ? json_encode($values) : '[]';
+$delimiter = elgg_extract('data-token-delimiter', $vars, ',');
+if ($values) {
+	if (is_string($values)) {
+		$values = explode($delimiter, $values);
+	}
+	$vars['data-pre-populate'] = json_encode($values);
+} else {
+	$vars['data-pre-populate'] = '[]';
+}
 
 // Limit number of possible values
-$vars['data-token-limit'] = (!$vars['multiple']) ? 1 : null;
+if (isset($vars['limit'])) {
+	$limit = elgg_extract('limit', $vars, null);
+	unset($vars['limit']);
+}
+$vars['data-token-limit'] = (!$vars['multiple']) ? 1 : $limit;
 
 // Prepare query
 if (isset($vars['query'])) {
