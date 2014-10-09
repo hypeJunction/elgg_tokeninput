@@ -40,7 +40,7 @@ function elgg_tokeninput_export_entity($entity) {
 		$metadata[] = $entity->location;
 	}
 
-	$return = array(
+	$export = array(
 		'label' => $title,
 		'value' => $entity->guid,
 		'metadata' => ($metadata) ? implode('<br />', $metadata) : '',
@@ -51,7 +51,12 @@ function elgg_tokeninput_export_entity($entity) {
 		'html_token' => (elgg_view_exists("tokeninput/$type/$subtype")) ? elgg_view("tokeninput/$type/$subtype", array('entity' => $entity, 'for' => 'token')) : null,
 	);
 
-	return elgg_trigger_plugin_hook('tokeninput:entity:export', $type, array('entity' => $entity), $return);
+	$export = elgg_trigger_plugin_hook('tokeninput:entity:export', $type, array('entity' => $entity), $export);
+	array_walk_recursive($export, function (&$value) {
+		$value = (is_string($value)) ? html_entity_decode($value, ENT_QUOTES, 'UTF-8') : $value;
+	});
+
+	return $export;
 }
 
 /**
@@ -76,7 +81,7 @@ function elgg_tokeninput_export_metadata($metadata) {
 		return array();
 	}
 
-	$return = array(
+	$export = array(
 		'label' => $tag,
 		'value' => $tag,
 		'type' => $type,
@@ -85,7 +90,13 @@ function elgg_tokeninput_export_metadata($metadata) {
 		'html_token' => (elgg_view_exists("tokeninput/$type/$subtype")) ? elgg_view("tokeninput/$type/$subtype", array('tag' => $tag, 'metadata_id' => $id, 'for' => 'token')) : null,
 	);
 
-	return elgg_trigger_plugin_hook('tokeninput:entity:export', $type, array('tag' => $tag, 'metadata_id' => $id), $return);
+	$export = elgg_trigger_plugin_hook('tokeninput:entity:export', $type, array('tag' => $tag, 'metadata_id' => $id), $export);
+
+	array_walk_recursive($export, function (&$value) {
+		$value = (is_string($value)) ? html_entity_decode($value, ENT_QUOTES, 'UTF-8') : $value;
+	});
+
+	return $export;
 }
 
 /**
@@ -249,7 +260,7 @@ function elgg_tokeninput_search_tags($term, $options = array()) {
 		if (is_array($tag_names)) {
 			$search_tag_names = $tag_names;
 		} else {
-			$search_tag_names = explode(',',$tag_names);
+			$search_tag_names = explode(',', $tag_names);
 		}
 
 		foreach ($search_tag_names as $i => $tag_name) {
