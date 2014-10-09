@@ -2,7 +2,9 @@
 
 namespace hypeJunction\Lists;
 
+use ElggAnnotation;
 use ElggBatch;
+use ElggRiverItem;
 use Exception;
 
 class ElggList {
@@ -119,7 +121,7 @@ class ElggList {
 	 * @return ElggList
 	 */
 	public function setSearchQuery($query = array()) {
-	
+
 		if (!is_array($query)) {
 			return $this;
 		}
@@ -206,6 +208,159 @@ class ElggList {
 			$this->setHash();
 		}
 		return $this->hash;
+	}
+
+	/**
+	 * Get an array of attributes to contruct a new list
+	 * @param array $vars
+	 * @return array
+	 */
+	public function getListAttributes() {
+
+		if (!$this->options['list_type'] == 'list') {
+			$list_classes[] = 'elgg-list';
+			if (isset($this->options['list_class'])) {
+				$list_classes[] = $this->options['list_class'];
+			}
+		} else if ($this->options['list_type'] == 'gallery') {
+			$list_classes[] = 'elgg-gallery';
+			if (isset($this->options['gallery_class'])) {
+				$list_classes[] = $this->options['gallery_class'];
+			}
+		}
+
+		$attributes = array(
+			'id' => (isset($this->options['id'])) ? $this->options['id'] : $this->hash,
+			'class' => implode(' ', $list_classes),
+			'data-list' => true,
+			'data-hash' => $this->hash,
+		);
+		return elgg_trigger_plugin_hook('attributes:list', 'list', array(
+			'list' => $this
+				), $attributes);
+	}
+
+	/**
+	 * Get a list of attributes to attach to the list item
+	 * @param mixed $item	List item (entity, annotation or river)
+	 * @return array
+	 */
+	public function getItemAttributes($item = null) {
+
+		$item_classes[] = 'elgg-item';
+
+		if (elgg_instanceof($item)) {
+			$entity = $item;
+			$url = $entity->getURL();
+			$id = "elgg-{$item->getType()}-{$item->getGUID()}";
+			$item_classes[] = "elgg-item-{$item->getType()}";
+		} else if ($item instanceof ElggRiverItem) {
+			$river_id = $item->id;
+			$entity = $item->getObjectEntity();
+			if (!$entity) {
+				$item->getSubjectEntity();
+			}
+			$id = "item-{$item->getType()}-{$item->id}";
+			$item_classes[] = "elgg-item-river";
+		} else if ($item instanceof ElggAnnotation) {
+			$annotation_id = $item->id;
+			$entity = $item->getEntity();
+			$url = $item->getURL();
+			$id = "item-{$item->getType()}-{$item->id}";
+			$item_classes[] = "elgg-item-annotation";
+		}
+
+		if (isset($this->options['item_class'])) {
+			$item_classes[] = $this->options['item_class'];
+		}
+
+		$attributes = array(
+			'id' => $id,
+			'class' => implode(' ', $item_classes),
+			'data-river-id' => $river_id,
+			'data-annotation-id' => $annotation_id,
+			'data-guid' => $entity->guid,
+			'data-url' => $url,
+			'data-title' => (elgg_instanceof($entity, 'object')) ? $entity->title : $entity->name,
+		);
+
+		return elgg_trigger_plugin_hook('attributes:item', 'list', array(
+			'item' => $item
+				), $attributes);
+	}
+
+	/**
+	 * Display an html list of the entities
+	 * @param string $class		CSS class to attach to the table
+	 * @return string
+	 */
+	public function viewList() {
+
+		$context = (isset($this->options['list_type'])) ? $this->options['list_type'] : 'list';
+
+		elgg_push_context($context);
+
+		$items = $this->getItems();
+		$options = $this->getOptions();
+		$count = $this->getCount();
+
+		$offset = elgg_extract('offset', $options);
+		$limit = elgg_extract('limit', $options);
+		$base_url = elgg_extract('base_url', $options, '');
+		$pagination = elgg_extract('pagination', $options, true);
+		$offset_key = elgg_extract('offset_key', $options, 'offset');
+		$position = elgg_extract('position', $options, 'after');
+
+		if ($pagination && $count) {
+			$nav = elgg_view('navigation/pagination', array(
+				'base_url' => $base_url,
+				'offset' => $offset,
+				'count' => $count,
+				'limit' => $limit,
+				'offset_key' => $offset_key,
+			));
+		}
+
+		$html .= '<div class="elgg-list-container">';
+
+		if ($position == 'before' || $position == 'both') {
+			$html .= $nav;
+		}
+
+		$list_attrs = elgg_format_attributes($this->getListAttributes());
+
+		$html .= "<ul $list_attrs>";
+
+		foreach ($items as $item) {
+
+			$view = elgg_view_list_item($item, $options);
+
+			if (!$view) {
+				continue;
+			}
+
+			$has_items = true;
+
+			$item_attrs = elgg_format_attributes($this->getItemAttributes($item));
+
+			$html .= "<li $item_attrs>$view</li>";
+		}
+
+		if (!$has_items) {
+			$html .= '<li class="elgg-list-placeholder">' . elgg_echo('list:empty') . '</li>';
+		}
+
+		$html .= '</ul>';
+
+		if ($position == 'after' || $position == 'both') {
+			$html .= $nav;
+		}
+
+		$html .= '</div>';
+
+		elgg_pop_context();
+
+		return $html;
 	}
 
 }

@@ -6,12 +6,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/composer/installers.git",
-            "reference": "41cf781ed1271e25bf31b715416a349996aa2527"
+            "reference": "5ed225fe8545c4e4bf502d56fdd87791ecfdd078"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/composer/installers/zipball/41cf781ed1271e25bf31b715416a349996aa2527",
-            "reference": "41cf781ed1271e25bf31b715416a349996aa2527",
+            "url": "https://api.github.com/repos/composer/installers/zipball/5ed225fe8545c4e4bf502d56fdd87791ecfdd078",
+            "reference": "5ed225fe8545c4e4bf502d56fdd87791ecfdd078",
             "shasum": ""
         },
         "replace": {
@@ -22,7 +22,7 @@
             "composer/composer": "1.0.*@dev",
             "phpunit/phpunit": "4.1.*"
         },
-        "time": "2014-07-22 17:04:15",
+        "time": "2014-09-25 03:36:45",
         "type": "composer-installer",
         "extra": {
             "class": "Composer\\Installers\\Installer",
@@ -55,6 +55,7 @@
             "Hurad",
             "MODX Evo",
             "OXID",
+            "Thelia",
             "WolfCMS",
             "agl",
             "annotatecms",
@@ -67,6 +68,7 @@
             "drupal",
             "elgg",
             "fuelphp",
+            "grav",
             "installer",
             "joomla",
             "kohana",
@@ -93,20 +95,20 @@
     },
     {
         "name": "hypejunction/cmp-lists",
-        "version": "1.0.0",
-        "version_normalized": "1.0.0.0",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
             "url": "https://github.com/hypeJunction/cmp-lists.git",
-            "reference": "33d81f59298ddd7195ffd51f0702c86d2faeeefa"
+            "reference": "d158309a281ba5e43ef73258a72381111bf77c65"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/hypeJunction/cmp-lists/zipball/33d81f59298ddd7195ffd51f0702c86d2faeeefa",
-            "reference": "33d81f59298ddd7195ffd51f0702c86d2faeeefa",
+            "url": "https://api.github.com/repos/hypeJunction/cmp-lists/zipball/d158309a281ba5e43ef73258a72381111bf77c65",
+            "reference": "d158309a281ba5e43ef73258a72381111bf77c65",
             "shasum": ""
         },
-        "time": "2014-07-04 20:46:19",
+        "time": "2014-08-07 12:43:55",
         "type": "library",
         "installation-source": "dist",
         "autoload": {

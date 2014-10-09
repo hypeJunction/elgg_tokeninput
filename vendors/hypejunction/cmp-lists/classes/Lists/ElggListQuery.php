@@ -30,7 +30,7 @@ class ElggListQuery {
 
 	/**
 	 * Min search query length for fulltext search
-	 * @var integer 
+	 * @var integer
 	 */
 	protected $ft_min_chars;
 
@@ -42,7 +42,7 @@ class ElggListQuery {
 
 	/**
 	 * An array of getter options
-	 * @var array 
+	 * @var array
 	 */
 	protected $options = array();
 
@@ -139,7 +139,7 @@ class ElggListQuery {
 			'annotation_owner_guids' => '',
 		);
 
-		if (in_array($key, $multi)) {
+		if (array_key_exists($key, $multi)) {
 			if (!isset($this->options[$key])) {
 				$this->options[$key] = array();
 			}
@@ -262,7 +262,7 @@ class ElggListQuery {
 	private function sqlAddObjectSearchQuery($query = '') {
 
 		$this->sqlJoinObjectsTable();
-		$where = $this->sqlGetWhereFulltextClause($this->prefixes->object_entity, array('name', 'description'), $query, false);
+		$where = $this->sqlGetWhereFulltextClause($this->prefixes->objects_entity, array('title', 'description'), $query, false);
 		$this->sqlAddOption('wheres', $where, 'object_query');
 		return $this;
 	}

@@ -60,6 +60,9 @@ class ElggTable extends ElggList {
 
 				default :
 					$value = $entity->$header;
+					if (is_array($value)) {
+						$value = implode('; ', $value);
+					}
 					break;
 
 				case 'guid' :
@@ -192,10 +195,15 @@ class ElggTable extends ElggList {
 
 		$headers = $this->getColumnHeaders();
 		$items = $this->getItems();
+		$count = $this->getCount();
+		$i = 0;
 
 		$fh = @fopen('php://output', 'w');
 		fputcsv($fh, array_values($headers)); // Write header labels
 		foreach ($items as $item) {
+			$i++;
+			$name = (elgg_instanceof($item, 'object')) ? $item->title : $item->name;
+			elgg_log("CSV Exporting $i of $count: $name ($item->guid)");
 			// Put the data into the stream
 			fputcsv($fh, $this->getRowCells($item));
 		}
