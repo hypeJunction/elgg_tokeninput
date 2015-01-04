@@ -86,7 +86,7 @@ if (isset($vars['callback'])) {
 	unset($vars['callback']);
 }
 
-$vars['data-href'] = elgg_http_add_url_query_elements(elgg_normalize_url(ELGG_TOKENINPUT_PAGEHANDLER), $query);
+$vars['data-href'] = urldecode(elgg_http_add_url_query_elements(elgg_normalize_url(ELGG_TOKENINPUT_PAGEHANDLER), $query));
 
 $attributes = elgg_format_attributes($vars);
 
