@@ -163,6 +163,14 @@ function elgg_tokeninput_search_groups($term, $options = array()) {
 function elgg_tokeninput_search_objects($term, $options = array()) {
 
 	$options['query'] = $term;
+
+	$options['types'] = 'object';
+	if (!isset($options['subtype']) && !isset($options['subtypes'])) {
+		$entity_types = elgg_get_config('registered_entities');
+		$object_subtypes = elgg_extract('object', $entity_types, array());
+		$options['subtypes'] = $object_subtypes;
+	}
+	
 	$results = elgg_trigger_plugin_hook('search', 'object', $options, array());
 	return elgg_extract('entities', $results, array());
 }
