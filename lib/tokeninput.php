@@ -134,14 +134,9 @@ function elgg_tokeninput_search_all($term, $options = array()) {
  */
 function elgg_tokeninput_search_users($term, $options = array()) {
 
-	$term = sanitize_string($term);
-
-	// replace mysql vars with escaped strings
-	$q = str_replace(array('_', '%'), array('\_', '\%'), $term);
-
-	$list = new hypeJunction\Lists\ElggList($options);
-	$list->setSearchQuery(array('user' => $q));
-	return $list->getItems();
+	$options['query'] = $term;
+	$results = elgg_trigger_plugin_hook('search', 'user', $options, array());
+	return elgg_extract('entities', $results, array());
 }
 
 /**
@@ -153,14 +148,23 @@ function elgg_tokeninput_search_users($term, $options = array()) {
  */
 function elgg_tokeninput_search_groups($term, $options = array()) {
 
-	$term = sanitize_string($term);
+	$options['query'] = $term;
+	$results = elgg_trigger_plugin_hook('search', 'group', $options, array());
+	return elgg_extract('entities', $results, array());
+}
 
-	// replace mysql vars with escaped strings
-	$q = str_replace(array('_', '%'), array('\_', '\%'), $term);
+/**
+ * Callback function to search objects
+ *
+ * @param string $term Query term
+ * @param array $options An array of getter options
+ * @return array An array of elgg entities matching the search criteria
+ */
+function elgg_tokeninput_search_objects($term, $options = array()) {
 
-	$list = new hypeJunction\Lists\ElggList($options);
-	$list->setSearchQuery(array('group' => $q));
-	return $list->getItems();
+	$options['query'] = $term;
+	$results = elgg_trigger_plugin_hook('search', 'object', $options, array());
+	return elgg_extract('entities', $results, array());
 }
 
 /**
@@ -172,18 +176,21 @@ function elgg_tokeninput_search_groups($term, $options = array()) {
  */
 function elgg_tokeninput_search_friends($term, $options = array()) {
 
-	$term = sanitize_string($term);
+	$options['guids'] = array(ELGG_ENTITIES_NO_VALUE);
+	$friends = new ElggBatch('elgg_get_entities', array(
+		'relationship' => 'friend',
+		'relationship_guid' => elgg_get_logged_in_user_guid(),
+		'inverse_relationship' => false,
+		'limit' => 0,
+		'callback' => false,
+			), null, 100);
 
-	// replace mysql vars with escaped strings
-	$q = str_replace(array('_', '%'), array('\_', '\%'), $term);
+	foreach ($friends as $friend) {
+		$options['guids'][] = $friend->guid;
+	}
 
-	$options['relationship'] = 'friend';
-	$options['relationship_guid'] = elgg_get_logged_in_user_guid();
-	$options['inverse_relationship'] = false;
-
-	$list = new hypeJunction\Lists\ElggList($options, 'elgg_get_entities_from_relationship');
-	$list->setSearchQuery(array('user' => $q));
-	return $list->getItems();
+	$results = elgg_trigger_plugin_hook('search', 'user', $options, array());
+	return elgg_extract('entities', $results, array());
 }
 
 /**
@@ -249,7 +256,7 @@ function elgg_tokeninput_search_tags($term, $options = array()) {
 		if (is_array($tag_names)) {
 			$search_tag_names = $tag_names;
 		} else {
-			$search_tag_names = explode(',',$tag_names);
+			$search_tag_names = explode(',', $tag_names);
 		}
 
 		foreach ($search_tag_names as $i => $tag_name) {

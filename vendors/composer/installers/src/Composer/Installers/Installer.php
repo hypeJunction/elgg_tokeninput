@@ -13,6 +13,7 @@ class Installer extends LibraryInstaller
      * @var array
      */
     private $supportedTypes = array(
+        'asgard'       => 'AsgardInstaller',
         'agl'          => 'AglInstaller',
         'annotatecms'  => 'AnnotateCmsInstaller',
         'bitrix'       => 'BitrixInstaller',
@@ -22,11 +23,13 @@ class Installer extends LibraryInstaller
         'concrete5'    => 'Concrete5Installer',
         'craft'        => 'CraftInstaller',
         'croogo'       => 'CroogoInstaller',
-        'drupal'       => 'DrupalInstaller',
+        'dokuwiki'     => 'DokuWikiInstaller',
         'dolibarr'     => 'DolibarrInstaller',
+        'drupal'       => 'DrupalInstaller',
         'elgg'         => 'ElggInstaller',
-        'piwik'        => 'PiwikInstaller',
         'fuel'         => 'FuelInstaller',
+        'fuelphp'      => 'FuelphpInstaller',
+        'grav'         => 'GravInstaller',
         'hurad'        => 'HuradInstaller',
         'joomla'       => 'JoomlaInstaller',
         'kirby'        => 'KirbyInstaller',
@@ -35,16 +38,16 @@ class Installer extends LibraryInstaller
         'lithium'      => 'LithiumInstaller',
         'magento'      => 'MagentoInstaller',
         'mako'         => 'MakoInstaller',
-        'modxevo'      => 'MODXEvoInstaller',
         'mediawiki'    => 'MediaWikiInstaller',
         'microweber'    => 'MicroweberInstaller',
         'modulework'   => 'MODULEWorkInstaller',
+        'modxevo'      => 'MODXEvoInstaller',
         'moodle'       => 'MoodleInstaller',
         'october'      => 'OctoberInstaller',
         'oxid'         => 'OxidInstaller',
         'phpbb'        => 'PhpBBInstaller',
-        'piwik'        => 'PiwikInstaller',
         'pimcore'      => 'PimcoreInstaller',
+        'piwik'        => 'PiwikInstaller',
         'ppi'          => 'PPIInstaller',
         'puppet'       => 'PuppetInstaller',
         'redaxo'       => 'RedaxoInstaller',
@@ -52,13 +55,15 @@ class Installer extends LibraryInstaller
         'shopware'     => 'ShopwareInstaller',
         'silverstripe' => 'SilverStripeInstaller',
         'symfony1'     => 'Symfony1Installer',
+        'thelia'       => 'TheliaInstaller',
+        'tusk'         => 'TuskInstaller',
+        'typo3-cms'    => 'TYPO3CmsInstaller',
+        'typo3-flow'   => 'TYPO3FlowInstaller',
+        'whmcs'        => 'WHMCSInstaller',
         'wolfcms'      => 'WolfCMSInstaller',
         'wordpress'    => 'WordPressInstaller',
         'zend'         => 'ZendInstaller',
         'zikula'       => 'ZikulaInstaller',
-        'typo3-flow'   => 'TYPO3FlowInstaller',
-        'typo3-cms'    => 'TYPO3CmsInstaller',
-        'tusk'         => 'TuskInstaller',
     );
 
     /**
@@ -118,6 +123,8 @@ class Installer extends LibraryInstaller
     protected function findFrameworkType($type)
     {
         $frameworkType = false;
+
+        krsort($this->supportedTypes);
 
         foreach ($this->supportedTypes as $key => $val) {
             if ($key === substr($type, 0, strlen($key))) {

@@ -8,7 +8,7 @@ $english = array(
 	'tokeninput:text:delete' => '&times;',
 
 	'tokeninput:suggest' => 'Add "<b>%s</b>"',
-	
+
 );
 
 add_translation("en", $english);

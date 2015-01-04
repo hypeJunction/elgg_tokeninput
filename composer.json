@@ -22,11 +22,8 @@
 		"preferred-install": "dist"
 	},
 	"require": {
-		"php": ">=5.3.3",
+		"php": ">=5.4",
 		"composer/installers": "1.0.*"
-	},
-	"require-dev": {
-		"hypejunction/cmp-lists": "1.0.*"
 	}
 }
 

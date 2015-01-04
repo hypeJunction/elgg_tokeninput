@@ -14,4 +14,8 @@
 		<type>elgg_release</type>
 		<version>1.9</version>
 	</requires>
+	<requires>
+		<type>plugin</type>
+		<name>search</name>
+	</requires>
 </plugin_manifest>

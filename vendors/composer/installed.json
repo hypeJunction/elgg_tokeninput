@@ -6,12 +6,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/composer/installers.git",
-            "reference": "41cf781ed1271e25bf31b715416a349996aa2527"
+            "reference": "89d77bfbee79e16653f7162c86e602cc188471db"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/composer/installers/zipball/41cf781ed1271e25bf31b715416a349996aa2527",
-            "reference": "41cf781ed1271e25bf31b715416a349996aa2527",
+            "url": "https://api.github.com/repos/composer/installers/zipball/89d77bfbee79e16653f7162c86e602cc188471db",
+            "reference": "89d77bfbee79e16653f7162c86e602cc188471db",
             "shasum": ""
         },
         "replace": {
@@ -22,7 +22,7 @@
             "composer/composer": "1.0.*@dev",
             "phpunit/phpunit": "4.1.*"
         },
-        "time": "2014-07-22 17:04:15",
+        "time": "2014-11-29 01:29:17",
         "type": "composer-installer",
         "extra": {
             "class": "Composer\\Installers\\Installer",
@@ -55,6 +55,7 @@
             "Hurad",
             "MODX Evo",
             "OXID",
+            "Thelia",
             "WolfCMS",
             "agl",
             "annotatecms",
@@ -64,9 +65,11 @@
             "codeigniter",
             "concrete5",
             "croogo",
+            "dokuwiki",
             "drupal",
             "elgg",
             "fuelphp",
+            "grav",
             "installer",
             "joomla",
             "kohana",
@@ -89,46 +92,6 @@
             "wordpress",
             "zend",
             "zikula"
-        ]
-    },
-    {
-        "name": "hypejunction/cmp-lists",
-        "version": "1.0.0",
-        "version_normalized": "1.0.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/hypeJunction/cmp-lists.git",
-            "reference": "33d81f59298ddd7195ffd51f0702c86d2faeeefa"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/hypeJunction/cmp-lists/zipball/33d81f59298ddd7195ffd51f0702c86d2faeeefa",
-            "reference": "33d81f59298ddd7195ffd51f0702c86d2faeeefa",
-            "shasum": ""
-        },
-        "time": "2014-07-04 20:46:19",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "hypeJunction\\": "classes/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "GPL-2.0"
-        ],
-        "authors": [
-            {
-                "name": "Ismayil Khayredinov",
-                "email": "ismayil.khayredinov@gmail.com"
-            }
-        ],
-        "description": "List manipulation classes",
-        "homepage": "http://hypejunction.com",
-        "keywords": [
-            "Lists",
-            "classes"
         ]
     }
 ]

@@ -80,7 +80,7 @@ function elgg_tokeninput_page_handler($page) {
 			}
 		}
 	}
-	
+
 	if (!count($results) && $strict === false) {
 		$suggest = array(
 			'label' => $q,
