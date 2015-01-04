@@ -34,7 +34,7 @@
 			echo elgg_view('input/tokeninput/objects', array(
 				'name' => 'tk4',
 				'id' => 'tk4',
-				'subtype' => 'blog'
+				'subtype' => array('blog', 'bookmarks', 'file'),
 			));
 			?>
 		</div>
