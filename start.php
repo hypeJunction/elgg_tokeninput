@@ -67,7 +67,9 @@ function elgg_tokeninput_page_handler($page) {
 
 	$results = array();
 
-	$entities = call_user_func($callback, $q);
+	$options = get_input('options', array());
+
+	$entities = call_user_func($callback, $q, $options);
 
 	if ($entities) {
 		foreach ($entities as $entity) {
