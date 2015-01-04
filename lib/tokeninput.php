@@ -176,8 +176,10 @@ function elgg_tokeninput_search_objects($term, $options = array()) {
  */
 function elgg_tokeninput_search_friends($term, $options = array()) {
 
+	$options['query'] = $term;
+
 	$options['guids'] = array(ELGG_ENTITIES_NO_VALUE);
-	$friends = new ElggBatch('elgg_get_entities', array(
+	$friends = new ElggBatch('elgg_get_entities_from_relationship', array(
 		'relationship' => 'friend',
 		'relationship_guid' => elgg_get_logged_in_user_guid(),
 		'inverse_relationship' => false,
