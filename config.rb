@@ -1,6 +1,6 @@
 relative_assets = true
 
-css_dir = "views/default/css/"
+css_dir = "views/default/"
 sass_dir = "sass"
 
 output_style = :compact
