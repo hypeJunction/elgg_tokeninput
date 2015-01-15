@@ -3,7 +3,7 @@
 	<name>Token Input</name>
 	<id>elgg_tokeninput</id>
 	<author>Ismayil Khayredinov - hypeJunction (ismayil.khayredinov@gmail.com)</author>
-	<version>3.0.0.1</version>
+	<version>3.0.1</version>
 	<category>enhancement</category>
 	<category>forms</category>
 	<description>Tokenizing autocomplete for Elgg</description>
