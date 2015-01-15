@@ -152,3 +152,9 @@ div.token-input-dropdown {
 		}
 	}
 }
+
+.elgg-image-block {
+	&.elgg-tokeninput-token {
+		padding: 0; // aalborg fix
+	}
+}
