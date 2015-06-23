@@ -302,3 +302,16 @@ function elgg_tokeninput_search_tags($term, $options = array()) {
 
 	return elgg_get_metadata($options);
 }
+
+/**
+ * Returns a secret key to sign ajax requests
+ * @return string
+ */
+function elgg_tokeninput_get_secret() {
+	$secret = elgg_get_plugin_setting('__secret', 'elgg_tokeninput');
+	if (!$secret) {
+		$secret = generate_random_cleartext_password();
+		elgg_set_plugin_setting('__secret', $secret, 'elgg_tokeninput');
+	}
+	return $secret;
+}

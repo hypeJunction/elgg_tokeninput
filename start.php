@@ -73,11 +73,23 @@ function elgg_tokeninput_page_handler($page) {
 
 	$user = elgg_get_logged_in_user_entity();
 
-	$callback = urldecode(get_input('callback', 'elgg_tokeninput_search_all'));
+	$callback = urldecode(get_input('callback'));
+	if ($callback) {
+		$hmac = get_input('hmac');
+		$ts = get_input('ts');
+		if (hash_hmac('sha256', $ts . $callback, elgg_tokeninput_get_secret()) !== $hmac) {
+			header('HTTP/1.1 403 Forbidden');
+			exit;
+		}
+	} else {
+		$callback = 'elgg_tokeninput_search_all';
+	}
+	
 	$q = urldecode(get_input('term', get_input('q', '')));
 	$strict = (bool) get_input('strict', true);
 
 	if (!is_callable($callback)) {
+		header('HTTP/1.1 400 Bad Request');
 		exit;
 	}
 

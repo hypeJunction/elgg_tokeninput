@@ -91,6 +91,9 @@ unset($vars['strict']);
 if (isset($vars['callback'])) {
 	$query['callback'] = $vars['callback'];
 	unset($vars['callback']);
+
+	$query['ts'] = time();
+	$query['hmac'] = hash_hmac('sha256', $query['ts'] . $query['callback'], elgg_tokeninput_get_secret());
 }
 
 $vars['data-href'] = urldecode(elgg_http_add_url_query_elements(elgg_normalize_url(ELGG_TOKENINPUT_PAGEHANDLER), $query));
