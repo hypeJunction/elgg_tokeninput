@@ -28,7 +28,10 @@ function elgg_tokeninput_export_entity($entity) {
 	} else if (elgg_instanceof($entity, 'group')) {
 		$title = $entity->name;
 	} else {
-		$title = $entity->title;
+		$title = $entity->getDisplayName();
+		if (!$title) {
+			$title = elgg_echo('untitled');
+		}
 		$metadata[] = elgg_echo('byline', array($entity->getOwnerEntity()->name));
 	}
 
@@ -181,7 +184,7 @@ function elgg_tokeninput_search_objects($term, $options = array()) {
 		$object_subtypes = elgg_extract('object', $entity_types, array());
 		$options['subtypes'] = $object_subtypes;
 	}
-	
+
 	$results = elgg_trigger_plugin_hook('search', 'object', $options, array());
 	return elgg_extract('entities', $results, array());
 }
