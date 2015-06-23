@@ -52,6 +52,13 @@ if ($value) {
 }
 
 foreach ($value as $selected) {
+	if (!empty($vars['is_elgg_autocomplete'])) {
+		// Elgg autocomplete uses usernames
+		$user = get_user_by_username($selected);
+		if ($user) {
+			$selected = $user;
+		}
+	}
 	$values[] = elgg_tokeninput_export_entity($selected);
 }
 $vars['data-pre-populate'] = json_encode($values);
@@ -95,5 +102,11 @@ echo elgg_view('input/hidden', array(
 	'name' => 'elgg_tokeninput_fields[]',
 	'value' => $vars['name']
 ));
+if (!empty($vars['is_elgg_autocomplete'])) {
+	echo elgg_view('input/hidden', array(
+		'name' => 'elgg_tokeninput_autocomplete[]',
+		'value' => $vars['name']
+	));
+}
 
 echo "<input $attributes />";

@@ -1,13 +1,20 @@
 <?php
 
 if (isset($vars['match_on'])) {
-	switch ($vars['match_on']) {
+	$match_on = (array) $vars['match_on'];
+	unset($vars['match_on']);
+
+	$match_on = array_values($match_on);
+	$match_on = (count($match_on) > 1) ? 'all' : $match_on[0];
+
+	switch ($match_on) {
 		default :
 		case 'all' :
 			break;
 
 		case 'users' :
 			$callback = 'elgg_tokeninput_search_users';
+			$vars['is_elgg_autocomplete'] = true;
 			break;
 
 		case 'groups' :
@@ -16,9 +23,9 @@ if (isset($vars['match_on'])) {
 
 		case 'friends' :
 			$callback = 'elgg_tokeninput_search_friends';
+			$vars['is_elgg_autocomplete'] = true;
 			break;
 	}
-	unset($vars['match_on']);
 }
 
 if (isset($vars['match_owner'])) {

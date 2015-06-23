@@ -35,15 +35,29 @@ function elgg_tokeninput_init() {
  */
 function elgg_tokeninput_explode_field_values($hook, $type, $return, $params) {
 
-	$elgg_tokeninput_fields = get_input('elgg_tokeninput_fields');
+	$elgg_tokeninput_fields = (array) get_input('elgg_tokeninput_fields', array());
+	$elgg_tokneinput_autocomplete = (array) get_input('elgg_tokeninput_autocomplete', array());
 
-	if ($elgg_tokeninput_fields) {
+	if (!empty($elgg_tokeninput_fields)) {
 		foreach ($elgg_tokeninput_fields as $field_name) {
 			$values = explode(',', get_input($field_name, ''));
+			if (in_array($field_name, $elgg_tokneinput_autocomplete)) {
+				foreach ($values as $key => $value) {
+					$user = get_entity($value);
+					if ($user instanceof ElggUser) {
+						$values[$key] = $user->username;
+					}
+				}
+				if (sizeof($values) === 1) {
+					$values = array_values($values)[0];
+				}
+			}
 			set_input($field_name, $values);
 		}
-		set_input($elgg_tokeninput_fields, null);
 	}
+
+	set_input('elgg_tokeninput_fields', null);
+	set_input('elgg_tokeninput_autocomplete', null);
 
 	return $return;
 }
