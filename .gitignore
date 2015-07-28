@@ -5,4 +5,5 @@ robots.txt
 /nbproject/
 /.sass-cache/
 composer.lock
-/vendors/jquery/
+/vendor/
+Gemfile.lock

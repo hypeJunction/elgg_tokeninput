@@ -18,12 +18,11 @@
 		"installer-name": "elgg_tokeninput"
 	},
 	"config": {
-		"vendor-dir": "vendors",
-		"preferred-install": "dist"
+		"vendor-dir": "/vendor/"
 	},
 	"require": {
 		"php": ">=5.4",
-		"composer/installers": "1.0.*"
+		"composer/installers": "1.*"
 	}
 }
 
