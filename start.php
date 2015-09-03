@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(dirname(dirname(__FILE__))) . '/vendor/autoload.php';
+require_once __DIR__ . '/autoloader.php';
 
 define('ELGG_TOKENINPUT_PAGEHANDLER', 'tokeninput');
 
@@ -12,11 +12,6 @@ elgg_register_event_handler('init', 'system', 'elgg_tokeninput_init');
 function elgg_tokeninput_init() {
 
 	elgg_register_library('elgg.tokeninput', elgg_get_plugins_path() . 'elgg_tokeninput/lib/tokeninput.php');
-
-	elgg_define_js('jquery.tokeninput', array(
-		'src' => 'mod/elgg_tokeninput/vendors/jquery-tokeninput/build/jquery.tokeninput.min.js',
-		'deps' => array('jquery'),
-	));
 
 	elgg_require_js('tokeninput/init');
 
