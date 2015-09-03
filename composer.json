@@ -1,6 +1,6 @@
 {
 	"name": "hypejunction/elgg_tokeninput",
-	"version": "3.2.0",
+	"version": "3.3.0",
 	"type": "elgg-plugin",
 	"description": "Tokenizing autocomplete for Elgg",
 	"homepage": "http://hypejunction.com",
