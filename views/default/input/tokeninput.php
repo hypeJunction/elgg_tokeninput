@@ -13,6 +13,7 @@
  * @uess $vars['limit'] Limit number of tokens to a certain value
  *
  * @uses $vars['callback'] Callback function used to perform the search
+ * @uses $vars['endpoint'] Endpoint to use for seach. Default '/tokeninput'
  * @uses $vars['query'] Additional options to be passed as key-value parameters with the URL query
  *
  * @uses $vars['strict'] Toggle strict mode. If set to false, free input mode will be enabled and user will be given an option to add an arbitrary value, if no matching records found
@@ -93,7 +94,8 @@ if (isset($vars['callback'])) {
 	$query['hmac'] = hash_hmac('sha256', $query['ts'] . $query['callback'], elgg_tokeninput_get_secret());
 }
 
-$vars['data-href'] = urldecode(elgg_http_add_url_query_elements(elgg_normalize_url(ELGG_TOKENINPUT_PAGEHANDLER), $query));
+$endpoint = elgg_extract('endpoint', $vars, '/tokeninput');
+$vars['data-href'] = urldecode(elgg_http_add_url_query_elements(elgg_normalize_url($endpoint), $query));
 
 $autoexplode = elgg_extract('autoexplode', $vars, true);
 unset($vars['autoexplode']);
