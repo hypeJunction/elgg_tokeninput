@@ -6,10 +6,11 @@ require_once __DIR__ . '/lib/tokeninput.php';
 elgg_register_event_handler('init', 'system', 'elgg_tokeninput_init');
 
 /**
- * Initialize the plugin
+ * Initialize
+ * @return void
  */
 function elgg_tokeninput_init() {
-	
+
 	elgg_extend_view('css/elgg', 'css/tokeninput/stylesheet.css');
 	elgg_extend_view('css/admin', 'css/tokeninput/stylesheet.css');
 
@@ -22,8 +23,18 @@ function elgg_tokeninput_init() {
 
 /**
  * Unserialize tokeninput field values before performing an action
+ *
+ * @note Default behavior of the JS plugin is to implode user input into a
+ * comma-separated string. PHP plugin hook for 'action', 'all' will attempt
+ * to explode these values and feed them back into an action for further
+ * processing. This however, will only work with basic form input names,
+ * e.g. ```name="field_name"``` If you are working with more complex forms,
+ * where e.g. ```name="field_name[element_name]"```, you will need to add some
+ * custom logic to your action.
+ *
+ * @return void
  */
-function elgg_tokeninput_explode_field_values($hook, $type, $return, $params) {
+function elgg_tokeninput_explode_field_values() {
 
 	$elgg_tokeninput_fields = (array) get_input('elgg_tokeninput_fields', array());
 	$elgg_tokneinput_autocomplete = (array) get_input('elgg_tokeninput_autocomplete', array());
@@ -48,14 +59,13 @@ function elgg_tokeninput_explode_field_values($hook, $type, $return, $params) {
 
 	set_input('elgg_tokeninput_fields', null);
 	set_input('elgg_tokeninput_autocomplete', null);
-
-	return $return;
 }
 
 /**
- * Page handler for parcing autocomplete results
+ * Page handler for serving autocomplete results
  *
- * @param type $page
+ * @param array $page URL segments
+ * @return void
  */
 function elgg_tokeninput_page_handler($page) {
 
@@ -72,7 +82,7 @@ function elgg_tokeninput_page_handler($page) {
 	} else {
 		$callback = 'elgg_tokeninput_search_all';
 	}
-	
+
 	$q = urldecode(get_input('term', get_input('q', '')));
 	$strict = (bool) get_input('strict', true);
 
