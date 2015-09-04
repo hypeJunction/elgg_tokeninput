@@ -11,6 +11,16 @@
 			?>
 		</div>
 		<div>
+			<label for="tk1">Users tokeninput (multiple):</label>
+			<?php
+			echo elgg_view('input/tokeninput/users', array(
+				'name' => 'tk1-m',
+				'id' => 'tk1-m',
+				'multiple' => true,
+			));
+			?>
+		</div>
+		<div>
 			<label for="tk2">Friends tokeninput:</label>
 			<?php
 			echo elgg_view('input/tokeninput/friends', array(
