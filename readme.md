@@ -128,3 +128,6 @@ via AJAX, use `require()`
 		tokeninput.init();
 });
 ```
+
+* `define('ELGG_TOKENINPUT_PAGEHANDLER', 'tokeninput');` has been removed. If you need to modify
+page handler identifier, unregister the page handler and register a new one

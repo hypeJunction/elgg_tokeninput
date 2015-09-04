@@ -3,8 +3,6 @@
 require_once __DIR__ . '/autoloader.php';
 require_once __DIR__ . '/lib/tokeninput.php';
 
-define('ELGG_TOKENINPUT_PAGEHANDLER', 'tokeninput');
-
 elgg_register_event_handler('init', 'system', 'elgg_tokeninput_init');
 
 /**
@@ -17,7 +15,7 @@ function elgg_tokeninput_init() {
 
 	elgg_register_plugin_hook_handler('action', 'all', 'elgg_tokeninput_explode_field_values', 1);
 
-	elgg_register_page_handler(ELGG_TOKENINPUT_PAGEHANDLER, 'elgg_tokeninput_page_handler');
+	elgg_register_page_handler('tokeninput', 'elgg_tokeninput_page_handler');
 
 	elgg_extend_view('theme_sandbox/forms', 'theme_sandbox/forms/elgg_tokeninput');
 }
