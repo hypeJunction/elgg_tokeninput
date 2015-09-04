@@ -20,8 +20,6 @@
  */
 $vars['id'] = substr(md5(microtime() . rand()), 0, 10);
 
-elgg_load_library('elgg.tokeninput');
-
 elgg_load_js('jquery.tokeninput.js');
 elgg_load_js('elgg.tokeninput.js');
 elgg_load_css('elgg.tokeninput.css');

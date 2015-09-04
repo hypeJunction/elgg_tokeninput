@@ -111,3 +111,12 @@ if (is_array($attachment_guids)) {
 	}
 }
 ```
+
+
+## Upgrades
+
+## To 4.x
+
+* `elgg.tokeninput` library has been removed. `elgg_load_library('elgg.tokeninput')` calls will WSOD,
+just remove them
+

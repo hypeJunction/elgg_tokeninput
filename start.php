@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/autoloader.php';
+require_once __DIR__ . '/lib/tokeninput.php';
 
 define('ELGG_TOKENINPUT_PAGEHANDLER', 'tokeninput');
 
@@ -10,9 +11,7 @@ elgg_register_event_handler('init', 'system', 'elgg_tokeninput_init');
  * Initialize the plugin
  */
 function elgg_tokeninput_init() {
-
-	elgg_register_library('elgg.tokeninput', elgg_get_plugins_path() . 'elgg_tokeninput/lib/tokeninput.php');
-
+	
 	elgg_require_js('tokeninput/init');
 
 	elgg_extend_view('css/elgg', 'css/tokeninput/stylesheet.css');
@@ -63,8 +62,6 @@ function elgg_tokeninput_explode_field_values($hook, $type, $return, $params) {
  * @param type $page
  */
 function elgg_tokeninput_page_handler($page) {
-
-	elgg_load_library('elgg.tokeninput');
 
 	$user = elgg_get_logged_in_user_entity();
 
