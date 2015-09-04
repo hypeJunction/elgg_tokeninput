@@ -12,8 +12,6 @@ elgg_register_event_handler('init', 'system', 'elgg_tokeninput_init');
  */
 function elgg_tokeninput_init() {
 	
-	elgg_require_js('tokeninput/init');
-
 	elgg_extend_view('css/elgg', 'css/tokeninput/stylesheet.css');
 	elgg_extend_view('css/admin', 'css/tokeninput/stylesheet.css');
 
