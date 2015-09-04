@@ -16,6 +16,7 @@
  * @uses $vars['query'] Additional options to be passed as key-value parameters with the URL query
  *
  * @uses $vars['strict'] Toggle strict mode. If set to false, free input mode will be enabled and user will be given an option to add an arbitrary value, if no matching records found
+ * @uses $vars['autoexplode'] Attempt to explode values passed to the action into an array. This will add additional hidden inputs that will be used by 'action','all' hook
  *
  */
 $vars['id'] = substr(md5(microtime() . rand()), 0, 10);
@@ -94,18 +95,21 @@ if (isset($vars['callback'])) {
 
 $vars['data-href'] = urldecode(elgg_http_add_url_query_elements(elgg_normalize_url(ELGG_TOKENINPUT_PAGEHANDLER), $query));
 
-$attributes = elgg_format_attributes($vars);
+$autoexplode = elgg_extract('autoexplode', $vars, true);
+unset($vars['autoexplode']);
 
-// Add a hidden field to use in the action hook to unserialize the values
-echo elgg_view('input/hidden', array(
-	'name' => 'elgg_tokeninput_fields[]',
-	'value' => $vars['name']
-));
-if (!empty($vars['is_elgg_autocomplete'])) {
+if ($autoexplode) {
+	// Add a hidden field to use in the action hook to unserialize the values
 	echo elgg_view('input/hidden', array(
-		'name' => 'elgg_tokeninput_autocomplete[]',
+		'name' => 'elgg_tokeninput_fields[]',
 		'value' => $vars['name']
 	));
+	if (!empty($vars['is_elgg_autocomplete'])) {
+		echo elgg_view('input/hidden', array(
+			'name' => 'elgg_tokeninput_autocomplete[]',
+			'value' => $vars['name']
+		));
+	}
 }
 
-echo "<input $attributes />";
+echo elgg_format_element('input', $vars);
