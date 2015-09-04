@@ -95,7 +95,11 @@ if (isset($vars['callback'])) {
 }
 
 $endpoint = elgg_extract('endpoint', $vars, '/tokeninput');
+unset($vars['endpoint']);
+
 $vars['data-href'] = urldecode(elgg_http_add_url_query_elements(elgg_normalize_url($endpoint), $query));
+
+$vars['data-placeholder'] = elgg_extract('placeholder', $vars, elgg_echo('tokeninput:text:placeholder'));
 
 $autoexplode = elgg_extract('autoexplode', $vars, true);
 unset($vars['autoexplode']);
