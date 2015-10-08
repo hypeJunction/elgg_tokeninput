@@ -13,18 +13,16 @@
  * @uess $vars['limit'] Limit number of tokens to a certain value
  *
  * @uses $vars['callback'] Callback function used to perform the search
+ * @uses $vars['endpoint'] Endpoint to use for seach. Default '/tokeninput'
  * @uses $vars['query'] Additional options to be passed as key-value parameters with the URL query
  *
  * @uses $vars['strict'] Toggle strict mode. If set to false, free input mode will be enabled and user will be given an option to add an arbitrary value, if no matching records found
+ * @uses $vars['autoexplode'] Attempt to explode values passed to the action into an array. This will add additional hidden inputs that will be used by 'action','all' hook
  *
  */
 $vars['id'] = substr(md5(microtime() . rand()), 0, 10);
 
-elgg_load_library('elgg.tokeninput');
-
-elgg_load_js('jquery.tokeninput.js');
-elgg_load_js('elgg.tokeninput.js');
-elgg_load_css('elgg.tokeninput.css');
+elgg_require_js('tokeninput/init');
 
 if (!isset($vars['name'])) {
 	$vars['name'] = 'tokeninput';
@@ -96,20 +94,28 @@ if (isset($vars['callback'])) {
 	$query['hmac'] = hash_hmac('sha256', $query['ts'] . $query['callback'], elgg_tokeninput_get_secret());
 }
 
-$vars['data-href'] = urldecode(elgg_http_add_url_query_elements(elgg_normalize_url(ELGG_TOKENINPUT_PAGEHANDLER), $query));
+$endpoint = elgg_extract('endpoint', $vars, '/tokeninput');
+unset($vars['endpoint']);
 
-$attributes = elgg_format_attributes($vars);
+$vars['data-href'] = urldecode(elgg_http_add_url_query_elements(elgg_normalize_url($endpoint), $query));
 
-// Add a hidden field to use in the action hook to unserialize the values
-echo elgg_view('input/hidden', array(
-	'name' => 'elgg_tokeninput_fields[]',
-	'value' => $vars['name']
-));
-if (!empty($vars['is_elgg_autocomplete'])) {
+$vars['data-placeholder'] = elgg_extract('placeholder', $vars, elgg_echo('tokeninput:text:placeholder'));
+
+$autoexplode = elgg_extract('autoexplode', $vars, true);
+unset($vars['autoexplode']);
+
+if ($autoexplode) {
+	// Add a hidden field to use in the action hook to unserialize the values
 	echo elgg_view('input/hidden', array(
-		'name' => 'elgg_tokeninput_autocomplete[]',
+		'name' => 'elgg_tokeninput_fields[]',
 		'value' => $vars['name']
 	));
+	if (!empty($vars['is_elgg_autocomplete'])) {
+		echo elgg_view('input/hidden', array(
+			'name' => 'elgg_tokeninput_autocomplete[]',
+			'value' => $vars['name']
+		));
+	}
 }
 
-echo "<input $attributes />";
+echo elgg_format_element('input', $vars);

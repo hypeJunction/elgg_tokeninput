@@ -1,39 +1,40 @@
 <?php
 
-require_once dirname(dirname(dirname(__FILE__))) . '/vendor/autoload.php';
-
-define('ELGG_TOKENINPUT_PAGEHANDLER', 'tokeninput');
+require_once __DIR__ . '/autoloader.php';
+require_once __DIR__ . '/lib/tokeninput.php';
 
 elgg_register_event_handler('init', 'system', 'elgg_tokeninput_init');
 
 /**
- * Initialize the plugin
+ * Initialize
+ * @return void
  */
 function elgg_tokeninput_init() {
-
-	elgg_register_library('elgg.tokeninput', elgg_get_plugins_path() . 'elgg_tokeninput/lib/tokeninput.php');
-
-	elgg_define_js('jquery.tokeninput', array(
-		'src' => 'mod/elgg_tokeninput/vendors/jquery-tokeninput/build/jquery.tokeninput.min.js',
-		'deps' => array('jquery'),
-	));
-
-	elgg_require_js('tokeninput/init');
 
 	elgg_extend_view('css/elgg', 'css/tokeninput/stylesheet.css');
 	elgg_extend_view('css/admin', 'css/tokeninput/stylesheet.css');
 
 	elgg_register_plugin_hook_handler('action', 'all', 'elgg_tokeninput_explode_field_values', 1);
 
-	elgg_register_page_handler(ELGG_TOKENINPUT_PAGEHANDLER, 'elgg_tokeninput_page_handler');
+	elgg_register_page_handler('tokeninput', 'elgg_tokeninput_page_handler');
 
 	elgg_extend_view('theme_sandbox/forms', 'theme_sandbox/forms/elgg_tokeninput');
 }
 
 /**
  * Unserialize tokeninput field values before performing an action
+ *
+ * @note Default behavior of the JS plugin is to implode user input into a
+ * comma-separated string. PHP plugin hook for 'action', 'all' will attempt
+ * to explode these values and feed them back into an action for further
+ * processing. This however, will only work with basic form input names,
+ * e.g. ```name="field_name"``` If you are working with more complex forms,
+ * where e.g. ```name="field_name[element_name]"```, you will need to add some
+ * custom logic to your action.
+ *
+ * @return void
  */
-function elgg_tokeninput_explode_field_values($hook, $type, $return, $params) {
+function elgg_tokeninput_explode_field_values() {
 
 	$elgg_tokeninput_fields = (array) get_input('elgg_tokeninput_fields', array());
 	$elgg_tokneinput_autocomplete = (array) get_input('elgg_tokeninput_autocomplete', array());
@@ -58,18 +59,15 @@ function elgg_tokeninput_explode_field_values($hook, $type, $return, $params) {
 
 	set_input('elgg_tokeninput_fields', null);
 	set_input('elgg_tokeninput_autocomplete', null);
-
-	return $return;
 }
 
 /**
- * Page handler for parcing autocomplete results
+ * Page handler for serving autocomplete results
  *
- * @param type $page
+ * @param array $page URL segments
+ * @return void
  */
 function elgg_tokeninput_page_handler($page) {
-
-	elgg_load_library('elgg.tokeninput');
 
 	$user = elgg_get_logged_in_user_entity();
 
@@ -84,7 +82,7 @@ function elgg_tokeninput_page_handler($page) {
 	} else {
 		$callback = 'elgg_tokeninput_search_all';
 	}
-	
+
 	$q = urldecode(get_input('term', get_input('q', '')));
 	$strict = (bool) get_input('strict', true);
 

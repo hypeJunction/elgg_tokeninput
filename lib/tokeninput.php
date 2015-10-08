@@ -1,9 +1,11 @@
 <?php
 
 /**
- * Get exportable entity values
+ * Export an entity into a form accepted by tokeninput
  *
- * @param ElggEntity $entity
+ * @note Use 'tokeninput:entity:export', $type to filter the exported values
+ * 
+ * @param ElggEntity $entity Entity to export
  * @return array
  */
 function elgg_tokeninput_export_entity($entity) {
@@ -63,9 +65,11 @@ function elgg_tokeninput_export_entity($entity) {
 }
 
 /**
- * Get exportable metadata values
+ * Export metadata into a form accepted by tokeninput
  *
- * @param ElggMetadata $metadata
+ * @note Use 'tokeninput:entity:export', $metadata_name to filter output
+ * 
+ * @param ElggMetadata $metadata Metadata to export
  * @return array
  */
 function elgg_tokeninput_export_metadata($metadata) {

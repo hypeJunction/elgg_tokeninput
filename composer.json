@@ -15,6 +15,9 @@
 			"email": "info@hypejunction.com"
 		}
 	],
+	"require": {
+		 "bower-asset/jquery-tokeninput": "~1.7.0"
+	},
 	"require-dev": {
 		"composer/installers": "~1.0"
 	}
