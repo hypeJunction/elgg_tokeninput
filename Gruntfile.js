@@ -81,7 +81,7 @@ module.exports = function (grunt) {
 			},
 			release: {
 				tag_name: '<%= pkg.version %>',
-				target_commitish: 'dev',
+				target_commitish: '3.x',
 				name: 'Release <%= pkg.version %>',
 				body: 'Self-contained ZIP distribution for <%= pkg.name %>',
 				draft: false,
