@@ -9,16 +9,11 @@ Replacement for Elgg's core autocomplete and userpicker
 
 ## Features ##
 
-* Integrates jquery.tokeninput to create user-friendly autocomplete / userpicker inputs
-* Autocomplete entity and tag input fields
-* Can be easily extended to create autocomplete inputs with custom search logic
-* Allows single as well as multiple values
-* Allow free tag input
-
-
-## Attributions / Credits ##
-
-* jquery.tokeninput http://loopj.com/jquery-tokeninput/
+* User-friendly autocomplete and userpicker inputs
+* Works with entities and meta tags
+* Developer-friendly
+* Single and multiple selection
+* Free tagging
 
 
 ## Notes ##
@@ -121,3 +116,8 @@ just remove them
 
 * `define('ELGG_TOKENINPUT_PAGEHANDLER', 'tokeninput');` has been removed. If you need to modify
 page handler identifier, unregister the page handler and register a new one
+
+
+## Attributions / Credits ##
+
+* jquery.tokeninput http://loopj.com/jquery-tokeninput/
