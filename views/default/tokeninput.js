@@ -1,6 +1,4 @@
-define(function(require) {
-
-	var $ = require('jquery');
+require(['jquery'], function ($) {
 
 	if ($('.elgg-input-tokeninput').length) {
 		require(['tokeninput/lib'], function(tokeninput) {
@@ -15,4 +13,5 @@ define(function(require) {
 			});
 		}
 	});
+	
 });

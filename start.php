@@ -13,6 +13,7 @@ function elgg_tokeninput_init() {
 
 	elgg_extend_view('elgg.css', 'tokeninput/stylesheet.css');
 	elgg_extend_view('admin.css', 'tokeninput/stylesheet.css');
+	elgg_extend_view('elgg.js', 'tokeninput.js');
 
 	elgg_register_plugin_hook_handler('action', 'all', 'elgg_tokeninput_explode_field_values', 1);
 

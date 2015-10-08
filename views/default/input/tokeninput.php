@@ -22,8 +22,6 @@
  */
 $vars['id'] = substr(md5(microtime() . rand()), 0, 10);
 
-elgg_require_js('tokeninput/init');
-
 if (!isset($vars['name'])) {
 	$vars['name'] = 'tokeninput';
 }

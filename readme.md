@@ -120,14 +120,7 @@ if (is_array($attachment_guids)) {
 * `elgg.tokeninput` library has been removed. `elgg_load_library('elgg.tokeninput')` calls will WSOD,
 just remove them
 
-* Tokeninput JS is no longer loaded on each page load. If you are loading a view that contains a tokeninput
-via AJAX, use `require()`
-
-```js
-	require(['tokeninput/lib'], function(tokeninput) {
-		tokeninput.init();
-});
-```
+* `tokeninput/init` AMD module has been removed. Tokeninput input is bootstrapped as need on page load and on ajax requests.
 
 * `define('ELGG_TOKENINPUT_PAGEHANDLER', 'tokeninput');` has been removed. If you need to modify
 page handler identifier, unregister the page handler and register a new one
