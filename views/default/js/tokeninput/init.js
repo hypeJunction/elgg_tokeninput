@@ -8,8 +8,8 @@ define(function(require) {
 		});
 	}
 
-	$(document).ajaxSuccess(function(data) {
-		if ($(data).has('.elgg-input-tokeninput')) {
+	$(document).ajaxComplete(function() {
+		if ($('.elgg-input-tokeninput:not(.elgg-state-ready)').length) {
 			require(['tokeninput/lib'], function(tokeninput) {
 				tokeninput.init();
 			});

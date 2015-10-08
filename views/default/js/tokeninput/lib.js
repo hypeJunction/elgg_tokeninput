@@ -29,7 +29,9 @@ define(['elgg', 'jquery', 'jquery.tokeninput'], function(elgg, $) {
 		 * @returns {void}
 		 */
 		init: function() {
-			$(document).on('initialize', '.elgg-input-tokeninput:not(.elgg-state-ready)', tokeninput.initInput);
+			$(document)
+					.off('initialize', '.elgg-input-tokeninput:not(.elgg-state-ready)')
+					.on('initialize', '.elgg-input-tokeninput:not(.elgg-state-ready)', tokeninput.initInput);
 			$('.elgg-input-tokeninput:not(.elgg-state-ready)').trigger('initialize');
 		},
 		/**
