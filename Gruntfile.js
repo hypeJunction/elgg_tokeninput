@@ -83,7 +83,7 @@ module.exports = function (grunt) {
 				tag_name: '<%= pkg.version %>',
 				target_commitish: '4.x',
 				name: 'Release <%= pkg.version %>',
-				body: 'Self-contained ZIP distribution for <%= pkg.name %>',
+				body: grunt.file.read('release.md'),
 				draft: false,
 				prerelease: false,
 				asset: {
