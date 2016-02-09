@@ -1,5 +1,4 @@
 @import "compass/css3"; // compass css3 helpers
-@import "../../../../../sass/global/variables";
 @import "variables";
 
 ul.token-input-list {
@@ -34,7 +33,7 @@ ul.token-input-list {
 			height: auto !important;
 			margin: 3px;
 			padding: 3px 5px;
-			background-color: darken($body-bg, 2%);
+			background-color: $background-color;
 			color: $body-font-color;
 			font-weight: bold;
 			cursor: default;
@@ -56,8 +55,8 @@ ul.token-input-list {
 
 		}
 		&.token-input-selected-token {
-			background-color: darken($body-bg, 5%);
-			color: darken($body-font-color, 5%);
+			background-color: $background-color;
+			color: $highlight-font-color;
 			span {
 				font-weight: bold;
 			}
@@ -87,6 +86,19 @@ ul.token-input-list {
 			overflow: hidden;
 		}
 	}
+	&.ui-sortable {
+		.token-input-token {
+			cursor: move;
+		}
+	}
+}
+
+.token-input-token-placeholder {
+	height: 30px;
+	border: 1px dashed $border-color;
+	display: block;
+	width: 100%;
+	margin: 3px;
 }
 
 div.token-input-dropdown {
@@ -98,7 +110,7 @@ div.token-input-dropdown {
 	border-right: 1px solid $border-color;
 	border-bottom: 1px solid $border-color;
 	cursor: default;
-	font-size: emCalc(12px);
+	font-size: 12px;
 	z-index: 1;
 	@include box-sizing(border-box);
 
@@ -122,14 +134,14 @@ div.token-input-dropdown {
 			font-weight: normal;
 			list-style-type: none;
 			&.token-input-dropdown-item {
-				background-color: darken($body-bg, 2%);
+				background-color: $dropdown-odd-background-color;
 			}
 			&.token-input-dropdown-item2 {
-				background-color: #fff;
+				background-color: $dropdown-even-background-color;
 			}
 			&.token-input-selected-dropdown-item {
-				background-color: darken($body-bg, 5%);
-				color: darken($body-font-color, 5%);
+				background-color: $background-color;
+				color: $highlight-font-color;
 			}
 			em {
 				font-weight: normal;
@@ -138,9 +150,9 @@ div.token-input-dropdown {
 		}
 	}
 	.elgg-tokeninput-suggestion {
-		margin:3px;
+		margin: 3px;
 		.elgg-tokeninput-suggestion .elgg-image {
-			margin-right:10px;
+			margin-right: 10px;
 		}
 		.elgg-image,
 		.elgg-image img {
@@ -160,4 +172,5 @@ div.token-input-dropdown {
 
 .token-input-delete-token {
 	font-family: 'Helvetica', sans-serif;
+	cursor: pointer;
 }
