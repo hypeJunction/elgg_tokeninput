@@ -17,6 +17,7 @@
  *
  * @uses $vars['strict'] Toggle strict mode. If set to false, free input mode will be enabled and user will be given an option to add an arbitrary value, if no matching records found
  * @uses $vars['autoexplode'] Attempt to explode values passed to the action into an array. This will add additional hidden inputs that will be used by 'action','all' hook
+ * @uses $vars['sortable'] Make tokens sortable
  *
  */
 $vars['id'] = substr(md5(microtime() . rand()), 0, 10);
@@ -64,6 +65,9 @@ if (isset($vars['limit'])) {
 	unset($vars['limit']);
 }
 $vars['data-token-limit'] = (!$vars['multiple']) ? 1 : $limit;
+if (elgg_extract('sortable', $vars, false) && $vars['data-token-limit'] !== 1) {
+	$vars['data-sortable'] = true;
+}
 
 // Prepare query
 if (isset($vars['query'])) {

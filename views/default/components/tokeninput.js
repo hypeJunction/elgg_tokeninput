@@ -1,10 +1,10 @@
-define(['elgg', 'jquery', 'jquery.tokeninput'], function(elgg, $) {
+define(['elgg', 'jquery', 'jquery.tokeninput'], function (elgg, $) {
 
 	var tokeninput = {
 		/**
 		 * Default configuration
 		 */
-		config: function() {
+		config: function () {
 			return {
 				method: 'POST',
 				queryParam: 'term',
@@ -28,7 +28,7 @@ define(['elgg', 'jquery', 'jquery.tokeninput'], function(elgg, $) {
 		 * Initialize the module
 		 * @returns {void}
 		 */
-		init: function() {
+		init: function () {
 			$(document)
 					.off('initialize', '.elgg-input-tokeninput:not(.elgg-state-ready)')
 					.on('initialize', '.elgg-input-tokeninput:not(.elgg-state-ready)', tokeninput.initInput);
@@ -38,19 +38,32 @@ define(['elgg', 'jquery', 'jquery.tokeninput'], function(elgg, $) {
 		 * Initialize the input
 		 * @returns {void}
 		 */
-		initInput: function() {
+		initInput: function () {
 			var $input = $(this);
 			var params = $.extend(true, {}, tokeninput.config());
 			$.extend(params, $input.data());
 			$input.tokenInput($input.data('href'), params);
 			$input.addClass('elgg-state-ready');
+
+			if (params.sortable) {
+				require(['jquery-ui'], function () {
+					$input.parent().find('.token-input-list').sortable({
+						items: '.token-input-token',
+						connectWith: '.token-input-list',
+						forcePlaceholderSize: true,
+						placeholder: 'token-input-token-placeholder',
+						opacity: 0.8,
+						revert: 500
+					});
+				});
+			}
 		},
 		/**
 		 * Format dropdown results
 		 * @param {object} item
 		 * @returns {String|Bool|@var;value|Object}
 		 */
-		resultsFormatter: function(item) {
+		resultsFormatter: function (item) {
 			var html = (item.html_result) ? '<li>' + item.html_result + '</li>' :
 					'<li><div class="elgg-image-block elgg-tokeninput-suggestion">\n\
 					<div class="elgg-image">' + ((item.icon) ? item.icon : '') + '</div>\n\
@@ -66,7 +79,7 @@ define(['elgg', 'jquery', 'jquery.tokeninput'], function(elgg, $) {
 		 * @param {object} item
 		 * @returns {String|Bool|@var;value|Object}
 		 */
-		tokenFormatter: function(item) {
+		tokenFormatter: function (item) {
 			var html = (item.html_token) ? '<li><p>' + item.html_token + '</p></li>' :
 					'<li><p><div class="elgg-image-block elgg-tokeninput-token">\n\
 					<div class="elgg-image">' + ((item.icon) ? item.icon : '') + '</div>\n\

@@ -14,7 +14,7 @@ Replacement for Elgg's core autocomplete and userpicker
 * Developer-friendly
 * Single and multiple selection
 * Free tagging
-
+* Drag&Drop sorting of tokens
 
 ## Notes ##
 
