@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Displays a tokenizing autocomplete input
  *

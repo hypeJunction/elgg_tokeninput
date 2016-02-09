@@ -11,15 +11,18 @@ elgg_register_event_handler('init', 'system', 'elgg_tokeninput_init');
  */
 function elgg_tokeninput_init() {
 
+	elgg_register_simplecache_view('tokeninput/lib.js');
+
 	elgg_extend_view('elgg.css', 'tokeninput/stylesheet.css');
 	elgg_extend_view('admin.css', 'tokeninput/stylesheet.css');
-	elgg_extend_view('elgg.js', 'tokeninput.js');
 
 	elgg_register_plugin_hook_handler('action', 'all', 'elgg_tokeninput_explode_field_values', 1);
 
 	elgg_register_page_handler('tokeninput', 'elgg_tokeninput_page_handler');
 
 	elgg_extend_view('theme_sandbox/forms', 'theme_sandbox/forms/elgg_tokeninput');
+
+	elgg_extend_view('input/tokeninput', 'tokeninput/require');
 }
 
 /**

@@ -15,10 +15,5 @@ if (file_exists("$plugin_root/vendor/autoload.php")) {
 return [
 	'default' => [
 		'jquery.tokeninput.js' => $path . '/vendor/bower-asset/jquery-tokeninput/build/jquery.tokeninput.min.js',
-
-		// BC
-		'tokeninput/lib.js' => __DIR__ . '/views/default/components/tokeninput.js',
-		'tokeninput/stylesheet.css' => __DIR__ . '/views/default/components/tokeninput.css',
 	]
 ];
-
