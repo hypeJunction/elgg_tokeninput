@@ -1,3 +1,15 @@
+<a name="4.1.0"></a>
+# [4.1.0](https://github.com/hypeJunction/elgg_tokeninput/compare/4.0.2...v4.1.0) (2016-02-09)
+
+
+### Features
+
+* **css:** slight restyle ([7e0801f](https://github.com/hypeJunction/elgg_tokeninput/commit/7e0801f))
+* **tokens:** tokens can now be sorted ([025a9c8](https://github.com/hypeJunction/elgg_tokeninput/commit/025a9c8))
+* **views:** better instantiation and BC ([56b1f44](https://github.com/hypeJunction/elgg_tokeninput/commit/56b1f44))
+
+
+
 <a name="4.0.2"></a>
 ## [4.0.2](https://github.com/hypeJunction/elgg_tokeninput/compare/3.3.2...v4.0.2) (2016-01-24)
 
