@@ -10,6 +10,7 @@ if (isset($vars['match_on'])) {
 	switch ($match_on) {
 		default :
 		case 'all' :
+			$vars['autoexplode'] = false;
 			break;
 
 		case 'users' :
@@ -19,6 +20,7 @@ if (isset($vars['match_on'])) {
 
 		case 'groups' :
 			$callback = 'elgg_tokeninput_search_groups';
+			$vars['autoexplode'] = false;
 			break;
 
 		case 'friends' :
