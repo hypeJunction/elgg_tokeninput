@@ -1,3 +1,15 @@
+<a name="4.1.1"></a>
+## [4.1.1](https://github.com/hypeJunction/elgg_tokeninput/compare/4.1.0...v4.1.1) (2016-06-16)
+
+
+### Bug Fixes
+
+* **input:** do not explode input/autocomplete values ([60637ba](https://github.com/hypeJunction/elgg_tokeninput/commit/60637ba)), closes [#7](https://github.com/hypeJunction/elgg_tokeninput/issues/7)
+* **input:** userpicker input behaviour now corresponds to core ([82258de](https://github.com/hypeJunction/elgg_tokeninput/commit/82258de)), closes [#6](https://github.com/hypeJunction/elgg_tokeninput/issues/6)
+* **views:** fix variable name in views.php ([768a19c](https://github.com/hypeJunction/elgg_tokeninput/commit/768a19c))
+
+
+
 <a name="4.1.0"></a>
 # [4.1.0](https://github.com/hypeJunction/elgg_tokeninput/compare/4.0.2...v4.1.0) (2016-02-09)
 
