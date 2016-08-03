@@ -1,3 +1,13 @@
+<a name="4.1.2"></a>
+## [4.1.2](https://github.com/hypeJunction/elgg_tokeninput/compare/4.1.1...v4.1.2) (2016-08-03)
+
+
+### Bug Fixes
+
+* **export:** arbitrary strings should be exported as metadata ([0b2c937](https://github.com/hypeJunction/elgg_tokeninput/commit/0b2c937))
+
+
+
 <a name="4.1.1"></a>
 ## [4.1.1](https://github.com/hypeJunction/elgg_tokeninput/compare/4.1.0...v4.1.1) (2016-06-16)
 
