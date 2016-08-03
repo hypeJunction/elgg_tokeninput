@@ -105,7 +105,7 @@ function elgg_tokeninput_page_handler($page) {
 		foreach ($entities as $entity) {
 			if (elgg_instanceof($entity)) {
 				$results[] = elgg_tokeninput_export_entity($entity);
-			} else if ($entity instanceof ElggMetadata) {
+			} else if ($entity instanceof ElggMetadata || is_string($entity)) {
 				$results[] = elgg_tokeninput_export_metadata($entity);
 			} else {
 				$results[] = (array) $entity;
