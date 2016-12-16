@@ -1,3 +1,13 @@
+<a name="4.1.3"></a>
+## [4.1.3](https://github.com/hypeJunction/elgg_tokeninput/compare/4.1.2...v4.1.3) (2016-12-16)
+
+
+### Bug Fixes
+
+* **css:** dropdown z-index should be higher than colorbox value ([f6890bb](https://github.com/hypeJunction/elgg_tokeninput/commit/f6890bb))
+
+
+
 <a name="4.1.2"></a>
 ## [4.1.2](https://github.com/hypeJunction/elgg_tokeninput/compare/4.1.1...v4.1.2) (2016-08-03)
 
