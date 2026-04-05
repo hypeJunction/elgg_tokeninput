@@ -96,8 +96,11 @@ function elgg_tokeninput_search_all($term, $options = array())
     }
     $subtypes_in = implode(',', $subtypes);
     $dbprefix = elgg_get_config('dbprefix');
+    // WARNING: users_entity subtable removed in Elgg 3.0 — rewrite this SQL
     $options['joins'][] = "LEFT JOIN {$dbprefix}users_entity ue ON ue.guid = e.guid AND e.type = 'user'";
+    // WARNING: groups_entity subtable removed in Elgg 3.0 — rewrite this SQL
     $options['joins'][] = "LEFT JOIN {$dbprefix}groups_entity ge ON ge.guid = e.guid AND e.type = 'group'";
+    // WARNING: objects_entity subtable removed in Elgg 3.0 — rewrite this SQL
     $options['joins'][] = "LEFT JOIN {$dbprefix}objects_entity oe ON oe.guid = e.guid AND e.type = 'object'";
     $options['wheres'][] = "(e.type = 'user' AND ue.banned = 'no' AND (ue.name LIKE '%{$q}%' OR ue.username LIKE '%{$q}%'))\n\t\t\tOR (e.type = 'group' AND ge.name LIKE '%{$q}%')\n\t\t\tOR (e.type = 'object' AND e.subtype IN ({$subtypes_in}) AND oe.title LIKE '%{$q}%')";
     return elgg_get_entities($options);
@@ -189,7 +192,9 @@ function elgg_tokeninput_search_owned_entities($term, $options = array())
     $subtypes_in = implode(',', $subtypes);
     $dbprefix = elgg_get_config('dbprefix');
     $options['types'] = array('object', 'group');
+    // WARNING: groups_entity subtable removed in Elgg 3.0 — rewrite this SQL
     $options['joins'][] = "LEFT JOIN {$dbprefix}groups_entity ge ON ge.guid = e.guid AND e.type = 'group'";
+    // WARNING: objects_entity subtable removed in Elgg 3.0 — rewrite this SQL
     $options['joins'][] = "LEFT JOIN {$dbprefix}objects_entity oe ON oe.guid = e.guid AND e.type = 'object'";
     $options['wheres'][] = "(e.type = 'group' AND ge.name LIKE '%{$q}%')\n\t\t\tOR (e.type = 'object' AND e.subtype IN ({$subtypes_in}) AND oe.title LIKE '%{$q}%')";
     $options['wheres'][] = "e.owner_guid = {$user->guid}";
