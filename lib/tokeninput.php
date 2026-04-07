@@ -174,14 +174,32 @@ function elgg_tokeninput_search_objects($term, $options = array())
  */
 function elgg_tokeninput_search_friends($term, $options = array())
 {
-    $options['query'] = $term;
-    $options['guids'] = array(ELGG_ENTITIES_NO_VALUE);
-    $friends = new ElggBatch('elgg_get_entities', array('relationship' => 'friend', 'relationship_guid' => elgg_get_logged_in_user_guid(), 'inverse_relationship' => false, 'limit' => 0, 'callback' => false), null, 100);
-    foreach ($friends as $friend) {
-        $options['guids'][] = $friend->guid;
+    $user_guid = elgg_get_logged_in_user_guid();
+    if (!$user_guid) {
+        return [];
     }
-    $results = elgg_trigger_plugin_hook('search', 'user', $options, array());
-    return elgg_extract('entities', $results, array());
+
+    $friend_guids = [];
+    $friends = elgg_get_entities([
+        'relationship' => 'friend',
+        'relationship_guid' => $user_guid,
+        'inverse_relationship' => false,
+        'type' => 'user',
+        'limit' => 0,
+        'callback' => false,
+    ]);
+    foreach ($friends as $friend) {
+        $friend_guids[] = $friend->guid;
+    }
+
+    if (empty($friend_guids)) {
+        return [];
+    }
+
+    $options['query'] = $term;
+    $options['guids'] = $friend_guids;
+    $results = elgg_trigger_plugin_hook('search', 'user', $options, []);
+    return elgg_extract('entities', $results, []);
 }
 /**
  * Callback function to search owned entities
