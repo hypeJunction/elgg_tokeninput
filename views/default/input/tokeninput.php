@@ -47,6 +47,7 @@ if ($value) {
 	$value = array();
 }
 
+$values = [];
 foreach ($value as $selected) {
 	if (!empty($vars['is_elgg_autocomplete'])) {
 		// Elgg autocomplete uses usernames

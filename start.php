@@ -1,22 +1,5 @@
 <?php
 
-require_once __DIR__ . '/autoloader.php';
-require_once __DIR__ . '/lib/tokeninput.php';
-elgg_register_event_handler('init', 'system', 'elgg_tokeninput_init');
-/**
- * Initialize
- * @return void
- */
-function elgg_tokeninput_init()
-{
-    elgg_register_simplecache_view('tokeninput/lib.js');
-    elgg_extend_view('elgg.css', 'tokeninput/stylesheet.css');
-    elgg_extend_view('admin.css', 'tokeninput/stylesheet.css');
-    elgg_register_plugin_hook_handler('action', 'all', 'elgg_tokeninput_explode_field_values', 1);
-    elgg_register_route('tokeninput', ['path' => '/tokeninput/{segments}', 'resource' => 'tokeninput', 'requirements' => ['segments' => '.+'], 'defaults' => ['segments' => '']]);
-    elgg_extend_view('theme_sandbox/forms', 'theme_sandbox/forms/elgg_tokeninput');
-    elgg_extend_view('input/tokeninput', 'tokeninput/require');
-}
 /**
  * Unserialize tokeninput field values before performing an action
  *
@@ -54,6 +37,7 @@ function elgg_tokeninput_explode_field_values()
     set_input('elgg_tokeninput_fields', null);
     set_input('elgg_tokeninput_autocomplete', null);
 }
+
 /**
  * Page handler for serving autocomplete results
  *

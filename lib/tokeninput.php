@@ -4,7 +4,7 @@
  * Export an entity into a form accepted by tokeninput
  *
  * @note Use 'tokeninput:entity:export', $type to filter the exported values
- * 
+ *
  * @param ElggEntity $entity Entity to export
  * @return array
  */
@@ -20,6 +20,7 @@ function elgg_tokeninput_export_entity($entity)
     $type = $entity->getType();
     $subtype = $entity->getSubtype();
     $icon = elgg_view_entity_icon($entity, 'small', array('use_hover' => false));
+    $metadata = [];
     if ($entity instanceof \ElggUser) {
         $title = "{$entity->name} ({$entity->username})";
     } else if ($entity instanceof \ElggGroup) {
@@ -29,7 +30,10 @@ function elgg_tokeninput_export_entity($entity)
         if (!$title) {
             $title = elgg_echo('untitled');
         }
-        $metadata[] = elgg_echo('byline', array($entity->getOwnerEntity()->name));
+        $owner = $entity->getOwnerEntity();
+        if ($owner) {
+            $metadata[] = elgg_echo('byline', array($owner->getDisplayName()));
+        }
     }
     if ($entity->description) {
         $metadata[] = elgg_get_excerpt(elgg_strip_tags($entity->description), 100);
@@ -37,26 +41,27 @@ function elgg_tokeninput_export_entity($entity)
     if ($entity->location) {
         $metadata[] = $entity->location;
     }
-    $export = array('label' => $title, 'value' => $entity->guid, 'metadata' => $metadata ? implode('<br />', $metadata) : '', 'icon' => $icon, 'type' => $type, 'subtype' => $subtype, 'html_result' => elgg_view_exists("tokeninput/{$type}/{$subtype}") ? elgg_view("tokeninput/{$type}/{$subtype}", array('entity' => $entity, 'for' => 'result')) : null, 'html_token' => elgg_view_exists("tokeninput/{$type}/{$subtype}") ? elgg_view("tokeninput/{$type}/{$subtype}", array('entity' => $entity, 'for' => 'token')) : null);
+    $export = array('label' => $title, 'value' => $entity->guid, 'metadata' => !empty($metadata) ? implode('<br />', $metadata) : '', 'icon' => $icon, 'type' => $type, 'subtype' => $subtype, 'html_result' => elgg_view_exists("tokeninput/{$type}/{$subtype}") ? elgg_view("tokeninput/{$type}/{$subtype}", array('entity' => $entity, 'for' => 'result')) : null, 'html_token' => elgg_view_exists("tokeninput/{$type}/{$subtype}") ? elgg_view("tokeninput/{$type}/{$subtype}", array('entity' => $entity, 'for' => 'token')) : null);
     $export = elgg_trigger_plugin_hook('tokeninput:entity:export', $type, array('entity' => $entity), $export);
     array_walk_recursive($export, function (&$value) {
         $value = is_string($value) ? html_entity_decode($value, ENT_QUOTES, 'UTF-8') : $value;
     });
     return $export;
 }
+
 /**
  * Export metadata into a form accepted by tokeninput
  *
  * @note Use 'tokeninput:entity:export', $metadata_name to filter output
- * 
- * @param ElggMetadata $metadata Metadata to export
+ *
+ * @param ElggMetadata|string $metadata Metadata to export
  * @return array
  */
 function elgg_tokeninput_export_metadata($metadata)
 {
-    if ($metadata instanceof ElggMetadata) {
-        $type = $metadata->getType();
-        $subtype = $metadata->getSubtype();
+    if ($metadata instanceof \ElggMetadata) {
+        $type = $metadata->name;
+        $subtype = null;
         $tag = $metadata->value;
         $id = $metadata->id;
     } else if (is_string($metadata)) {
@@ -74,6 +79,7 @@ function elgg_tokeninput_export_metadata($metadata)
     });
     return $export;
 }
+
 /**
  * Callback function to search for all entity types
  *
@@ -107,7 +113,7 @@ function elgg_tokeninput_search_all($term, $options = array())
     $object_options = $options;
     $object_options['query'] = $term;
     $object_options['types'] = 'object';
-    $entity_types = elgg_get_config('registered_entities');
+    $entity_types = elgg_entity_types_with_capability('searchable');
     $object_subtypes = elgg_extract('object', $entity_types, []);
     if ($object_subtypes) {
         $object_options['subtypes'] = $object_subtypes;
@@ -120,6 +126,7 @@ function elgg_tokeninput_search_all($term, $options = array())
 
     return $results;
 }
+
 /**
  * Callback function to search users
  *
@@ -133,6 +140,7 @@ function elgg_tokeninput_search_users($term, $options = array())
     $results = elgg_trigger_plugin_hook('search', 'user', $options, array());
     return elgg_extract('entities', $results, array());
 }
+
 /**
  * Callback function to search groups
  *
@@ -146,6 +154,7 @@ function elgg_tokeninput_search_groups($term, $options = array())
     $results = elgg_trigger_plugin_hook('search', 'group', $options, array());
     return elgg_extract('entities', $results, array());
 }
+
 /**
  * Callback function to search objects
  *
@@ -158,13 +167,14 @@ function elgg_tokeninput_search_objects($term, $options = array())
     $options['query'] = $term;
     $options['types'] = 'object';
     if (!isset($options['subtype']) && !isset($options['subtypes'])) {
-        $entity_types = elgg_get_config('registered_entities');
+        $entity_types = elgg_entity_types_with_capability('searchable');
         $object_subtypes = elgg_extract('object', $entity_types, array());
         $options['subtypes'] = $object_subtypes;
     }
     $results = elgg_trigger_plugin_hook('search', 'object', $options, array());
     return elgg_extract('entities', $results, array());
 }
+
 /**
  * Callback function to search friends
  *
@@ -201,6 +211,7 @@ function elgg_tokeninput_search_friends($term, $options = array())
     $results = elgg_trigger_plugin_hook('search', 'user', $options, []);
     return elgg_extract('entities', $results, []);
 }
+
 /**
  * Callback function to search owned entities
  *
@@ -232,7 +243,7 @@ function elgg_tokeninput_search_owned_entities($term, $options = array())
     $object_options['query'] = $term;
     $object_options['types'] = 'object';
     $object_options['owner_guid'] = $user->guid;
-    $entity_types = elgg_get_config('registered_entities');
+    $entity_types = elgg_entity_types_with_capability('searchable');
     $object_subtypes = elgg_extract('object', $entity_types, []);
     if ($object_subtypes) {
         $object_options['subtypes'] = $object_subtypes;
@@ -245,6 +256,7 @@ function elgg_tokeninput_search_owned_entities($term, $options = array())
 
     return $results;
 }
+
 /**
  * Callback function to search valid tags
  *
@@ -274,7 +286,7 @@ function elgg_tokeninput_search_tags($term, $options = array())
         return false;
     }
     $options['metadata_names'] = $search_tag_names;
-    $options['search_name_value_pairs'] = [
+    $options['metadata_name_value_pairs'] = [
         [
             'name' => $search_tag_names,
             'value' => "%{$term}%",
@@ -284,6 +296,7 @@ function elgg_tokeninput_search_tags($term, $options = array())
     ];
     return elgg_get_metadata($options);
 }
+
 /**
  * Returns a secret key to sign ajax requests
  * @return string
