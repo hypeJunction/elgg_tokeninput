@@ -10,7 +10,7 @@
  */
 function elgg_tokeninput_export_entity($entity)
 {
-    if (!elgg_instanceof($entity)) {
+    if (!$entity instanceof \ElggEntity) {
         if ($entity_from_guid = get_entity($entity)) {
             $entity = $entity_from_guid;
         } else {
@@ -20,9 +20,9 @@ function elgg_tokeninput_export_entity($entity)
     $type = $entity->getType();
     $subtype = $entity->getSubtype();
     $icon = elgg_view_entity_icon($entity, 'small', array('use_hover' => false));
-    if (elgg_instanceof($entity, 'user')) {
+    if ($entity instanceof \ElggUser) {
         $title = "{$entity->name} ({$entity->username})";
-    } else if (elgg_instanceof($entity, 'group')) {
+    } else if ($entity instanceof \ElggGroup) {
         $title = $entity->name;
     } else {
         $title = $entity->getDisplayName();
@@ -83,27 +83,42 @@ function elgg_tokeninput_export_metadata($metadata)
  */
 function elgg_tokeninput_search_all($term, $options = array())
 {
-    $term = sanitize_string($term);
-    // replace mysql vars with escaped strings
-    $q = str_replace(array('_', '%'), array('\_', '\%'), $term);
-    $entities = elgg_get_config('registered_entities');
-    $subtypes = array(0);
-    foreach ($entities['object'] as $subtype) {
-        $subtype_id = get_subtype_id('object', $subtype);
-        if ($subtype_id) {
-            $subtypes[] = $subtype_id;
-        }
+    $results = [];
+
+    // Search users
+    $user_options = $options;
+    $user_options['query'] = $term;
+    $user_results = elgg_trigger_plugin_hook('search', 'user', $user_options, []);
+    $user_entities = elgg_extract('entities', $user_results, []);
+    if (is_array($user_entities)) {
+        $results = array_merge($results, $user_entities);
     }
-    $subtypes_in = implode(',', $subtypes);
-    $dbprefix = elgg_get_config('dbprefix');
-    // WARNING: users_entity subtable removed in Elgg 3.0 — rewrite this SQL
-    $options['joins'][] = "LEFT JOIN {$dbprefix}users_entity ue ON ue.guid = e.guid AND e.type = 'user'";
-    // WARNING: groups_entity subtable removed in Elgg 3.0 — rewrite this SQL
-    $options['joins'][] = "LEFT JOIN {$dbprefix}groups_entity ge ON ge.guid = e.guid AND e.type = 'group'";
-    // WARNING: objects_entity subtable removed in Elgg 3.0 — rewrite this SQL
-    $options['joins'][] = "LEFT JOIN {$dbprefix}objects_entity oe ON oe.guid = e.guid AND e.type = 'object'";
-    $options['wheres'][] = "(e.type = 'user' AND ue.banned = 'no' AND (ue.name LIKE '%{$q}%' OR ue.username LIKE '%{$q}%'))\n\t\t\tOR (e.type = 'group' AND ge.name LIKE '%{$q}%')\n\t\t\tOR (e.type = 'object' AND e.subtype IN ({$subtypes_in}) AND oe.title LIKE '%{$q}%')";
-    return elgg_get_entities($options);
+
+    // Search groups
+    $group_options = $options;
+    $group_options['query'] = $term;
+    $group_results = elgg_trigger_plugin_hook('search', 'group', $group_options, []);
+    $group_entities = elgg_extract('entities', $group_results, []);
+    if (is_array($group_entities)) {
+        $results = array_merge($results, $group_entities);
+    }
+
+    // Search objects
+    $object_options = $options;
+    $object_options['query'] = $term;
+    $object_options['types'] = 'object';
+    $entity_types = elgg_get_config('registered_entities');
+    $object_subtypes = elgg_extract('object', $entity_types, []);
+    if ($object_subtypes) {
+        $object_options['subtypes'] = $object_subtypes;
+    }
+    $object_results = elgg_trigger_plugin_hook('search', 'object', $object_options, []);
+    $object_entities = elgg_extract('entities', $object_results, []);
+    if (is_array($object_entities)) {
+        $results = array_merge($results, $object_entities);
+    }
+
+    return $results;
 }
 /**
  * Callback function to search users
@@ -178,27 +193,39 @@ function elgg_tokeninput_search_friends($term, $options = array())
 function elgg_tokeninput_search_owned_entities($term, $options = array())
 {
     $user = elgg_get_logged_in_user_entity();
-    $term = sanitize_string($term);
-    // replace mysql vars with escaped strings
-    $q = str_replace(array('_', '%'), array('\_', '\%'), $term);
-    $entities = elgg_get_config('registered_entities');
-    $subtypes = array(0);
-    foreach ($entities['object'] as $subtype) {
-        $subtype_id = get_subtype_id('object', $subtype);
-        if ($subtype_id) {
-            $subtypes[] = $subtype_id;
-        }
+    if (!$user) {
+        return [];
     }
-    $subtypes_in = implode(',', $subtypes);
-    $dbprefix = elgg_get_config('dbprefix');
-    $options['types'] = array('object', 'group');
-    // WARNING: groups_entity subtable removed in Elgg 3.0 — rewrite this SQL
-    $options['joins'][] = "LEFT JOIN {$dbprefix}groups_entity ge ON ge.guid = e.guid AND e.type = 'group'";
-    // WARNING: objects_entity subtable removed in Elgg 3.0 — rewrite this SQL
-    $options['joins'][] = "LEFT JOIN {$dbprefix}objects_entity oe ON oe.guid = e.guid AND e.type = 'object'";
-    $options['wheres'][] = "(e.type = 'group' AND ge.name LIKE '%{$q}%')\n\t\t\tOR (e.type = 'object' AND e.subtype IN ({$subtypes_in}) AND oe.title LIKE '%{$q}%')";
-    $options['wheres'][] = "e.owner_guid = {$user->guid}";
-    return elgg_get_entities($options);
+
+    $results = [];
+
+    // Search owned groups
+    $group_options = $options;
+    $group_options['query'] = $term;
+    $group_options['owner_guid'] = $user->guid;
+    $group_results = elgg_trigger_plugin_hook('search', 'group', $group_options, []);
+    $group_entities = elgg_extract('entities', $group_results, []);
+    if (is_array($group_entities)) {
+        $results = array_merge($results, $group_entities);
+    }
+
+    // Search owned objects
+    $object_options = $options;
+    $object_options['query'] = $term;
+    $object_options['types'] = 'object';
+    $object_options['owner_guid'] = $user->guid;
+    $entity_types = elgg_get_config('registered_entities');
+    $object_subtypes = elgg_extract('object', $entity_types, []);
+    if ($object_subtypes) {
+        $object_options['subtypes'] = $object_subtypes;
+    }
+    $object_results = elgg_trigger_plugin_hook('search', 'object', $object_options, []);
+    $object_entities = elgg_extract('entities', $object_results, []);
+    if (is_array($object_entities)) {
+        $results = array_merge($results, $object_entities);
+    }
+
+    return $results;
 }
 /**
  * Callback function to search valid tags
@@ -209,9 +236,6 @@ function elgg_tokeninput_search_owned_entities($term, $options = array())
  */
 function elgg_tokeninput_search_tags($term, $options = array())
 {
-    $term = sanitize_string($term);
-    // replace mysql vars with escaped strings
-    $q = str_replace(array('_', '%'), array('\_', '\%'), $term);
     $valid_tag_names = elgg_get_registered_tag_metadata_names();
     $tag_names = urldecode(get_input('tag_names', ''));
     if ($tag_names) {
@@ -232,8 +256,14 @@ function elgg_tokeninput_search_tags($term, $options = array())
         return false;
     }
     $options['metadata_names'] = $search_tag_names;
-    $options['group_by'] = "v.string";
-    $options['wheres'] = array("v.string LIKE '%{$q}%'");
+    $options['search_name_value_pairs'] = [
+        [
+            'name' => $search_tag_names,
+            'value' => "%{$term}%",
+            'operand' => 'LIKE',
+            'case_sensitive' => false,
+        ],
+    ];
     return elgg_get_metadata($options);
 }
 /**
@@ -244,7 +274,7 @@ function elgg_tokeninput_get_secret()
 {
     $secret = elgg_get_plugin_setting('__secret', 'elgg_tokeninput');
     if (!$secret) {
-        $secret = generate_random_cleartext_password();
+        $secret = elgg_generate_password();
         elgg_set_plugin_setting('__secret', $secret, 'elgg_tokeninput');
     }
     return $secret;

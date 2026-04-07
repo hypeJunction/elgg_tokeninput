@@ -9,7 +9,7 @@ $vars['callback'] = 'elgg_tokeninput_search_tags';
 $vars['multiple'] = true;
 
 if (is_string($vars['value'])) {
-	$vars['value'] = string_to_tag_array($vars['value']);
+	$vars['value'] = elgg_string_to_array($vars['value']);
 }
 
 if (isset($vars['tag_names'])) {
