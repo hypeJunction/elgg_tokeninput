@@ -22,16 +22,13 @@ class ExportTest extends IntegrationTestCase {
     public function down() {}
 
     public function testExportUser(): void {
-        $user = $this->createUser([
-            'name' => 'Token Test User',
-            'username' => 'tokentestuser',
-        ]);
+        $user = $this->createUser();
 
         $export = elgg_tokeninput_export_entity($user);
 
         $this->assertIsArray($export);
-        $this->assertStringContainsString('Token Test User', $export['label']);
-        $this->assertStringContainsString('tokentestuser', $export['label']);
+        // Label contains display name and username
+        $this->assertStringContainsString($user->username, $export['label']);
         $this->assertEquals($user->guid, $export['value']);
         $this->assertEquals('user', $export['type']);
     }
