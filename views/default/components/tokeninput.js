@@ -46,7 +46,7 @@ define(['elgg', 'jquery', 'jquery.tokeninput'], function (elgg, $) {
 			$input.addClass('elgg-state-ready');
 
 			if (params.sortable) {
-				require(['jquery-ui'], function () {
+				require(['jquery-ui/widgets/sortable'], function () {
 					$input.parent().find('.token-input-list').sortable({
 						items: '.token-input-token',
 						connectWith: '.token-input-list',

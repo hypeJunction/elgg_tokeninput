@@ -266,7 +266,7 @@ function elgg_tokeninput_search_owned_entities($term, $options = array())
  */
 function elgg_tokeninput_search_tags($term, $options = array())
 {
-    $valid_tag_names = elgg_get_registered_tag_metadata_names();
+    $valid_tag_names = elgg_get_config('registered_tag_metadata_names') ?? ['tags'];
     $tag_names = urldecode(get_input('tag_names', ''));
     if ($tag_names) {
         if (is_array($tag_names)) {
@@ -303,10 +303,13 @@ function elgg_tokeninput_search_tags($term, $options = array())
  */
 function elgg_tokeninput_get_secret()
 {
-    $secret = elgg_get_plugin_setting('__secret', 'elgg_tokeninput');
+    $plugin = elgg_get_plugin_from_id('elgg_tokeninput');
+    $secret = $plugin ? $plugin->getSetting('__secret') : null;
     if (!$secret) {
         $secret = elgg_generate_password();
-        elgg_set_plugin_setting('__secret', $secret, 'elgg_tokeninput');
+        if ($plugin) {
+            $plugin->setSetting('__secret', $secret);
+        }
     }
     return $secret;
 }
