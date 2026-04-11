@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.6/phpunit.xsd"
+         bootstrap="bootstrap.php"
+         colors="true">
+    <php>
+        <env name="ELGG_DB_PREFIX" value="elgg_"/>
+        <env name="ELGG_DB_HOST" value="db"/>
+        <env name="ELGG_DB_NAME" value="elgg"/>
+        <env name="ELGG_DB_USER" value="elgg"/>
+        <env name="ELGG_DB_PASS" value="elgg"/>
+    </php>
+    <testsuites>
+        <testsuite name="integration">
+            <directory>phpunit/integration</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
