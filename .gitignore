@@ -9,4 +9,4 @@ robots.txt
 /vendor/
 /mod/
 composer.lock
-Gemfile.lock
+Gemfile.lockdocker/.env

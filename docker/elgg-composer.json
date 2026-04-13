@@ -1,0 +1,27 @@
+{
+    "name": "elgg/test-site",
+    "type": "project",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "elgg/elgg": "4.3.6",
+        "composer/installers": "^1.0 || ^2.0"
+    },
+    "replace": {
+        "roave/security-advisories": "dev-master"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ],
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        },
+        "audit": {
+            "block-insecure": false
+        }
+    }
+}
