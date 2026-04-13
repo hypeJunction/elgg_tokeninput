@@ -1,0 +1,4 @@
+# elgg_tokeninput's manifest.xml declares the Elgg core 'search' plugin
+# as a dep, which is bundled with Elgg core (not a sibling plugin in
+# this workspace). No sibling plugins need to be mounted for the
+# characterization smoke.

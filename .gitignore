@@ -10,3 +10,7 @@ robots.txt
 /mod/
 composer.lock
 Gemfile.lockdocker/.env
+tests/playwright/node_modules/
+tests/playwright/test-results/
+tests/playwright/playwright-report/
+tests/.phpunit.result.cache
