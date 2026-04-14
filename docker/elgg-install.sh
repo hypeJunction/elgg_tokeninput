@@ -20,6 +20,19 @@ echo "MySQL is ready."
 
 cd /var/www/html
 
+# Elgg core ships bundled plugins under vendor/elgg/elgg/mod/. They need to
+# be reachable via /var/www/html/mod/ for the plugin loader to find them.
+# Symlink any core plugin that isn't already bind-mounted by the per-plugin
+# compose stack — the bind mount always wins.
+if [ -d /var/www/html/vendor/elgg/elgg/mod ]; then
+    for core_plugin_dir in /var/www/html/vendor/elgg/elgg/mod/*/; do
+        core_plugin_id=$(basename "${core_plugin_dir}")
+        if [ ! -e "/var/www/html/mod/${core_plugin_id}" ]; then
+            ln -s "${core_plugin_dir%/}" "/var/www/html/mod/${core_plugin_id}"
+        fi
+    done
+fi
+
 if [ ! -f /var/www/html/.elgg-installed ]; then
     echo "Installing Elgg 4.x..."
 
@@ -128,6 +141,9 @@ SETTINGS_VALUES
             echo 'ERROR: plugin ${PLUGIN_ID} not found at /var/www/html/mod/${PLUGIN_ID}' . PHP_EOL;
             exit(1);
         }
+        // Move to end of load order so every dep is positioned before it.
+        // Elgg 4.x's position check rejects activation when a dep loads later.
+        \$plugin->setPriority('last');
         if (\$plugin->isActive()) {
             echo 'Plugin ${PLUGIN_ID} already active.' . PHP_EOL;
         } else {

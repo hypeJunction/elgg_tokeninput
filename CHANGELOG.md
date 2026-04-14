@@ -1,3 +1,17 @@
+<a name="5.0.0"></a>
+## 5.0.0 (2026-04-14)
+
+### Elgg 4.x migration
+
+* Migrated plugin to Elgg 4.x (via 3.x). Target PHP >= 7.4.
+* `manifest.xml` removed — `composer.json` is now the sole metadata source.
+* `plugin.dependencies` declared in `elgg-plugin.php` (`search`, position: after).
+* `composer.json` bumped to `composer/installers ^2.0` with `config.allow-plugins` block.
+* License SPDX id normalized to `GPL-2.0-or-later`.
+* Added PHPUnit integration test suite (16 tests, 127 assertions) and Playwright smoke.
+* Added per-plugin Docker test stack under `docker/` (Elgg 4.x + MySQL + Playwright via `--profile test`).
+* `ARCHITECTURE.md` added.
+
 <a name="4.1.3"></a>
 ## [4.1.3](https://github.com/hypeJunction/elgg_tokeninput/compare/4.1.2...v4.1.3) (2016-12-16)
 
