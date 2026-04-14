@@ -1,14 +1,14 @@
 {
 	"name": "hypejunction/elgg_tokeninput",
-	"version": "4.1.3",
+	"version": "5.0.0",
 	"type": "elgg-plugin",
 	"description": "Tokenizing autocomplete for Elgg",
 	"homepage": "http://hypejunction.com",
 	"keywords": [
 		"elgg", "plugin", "autocomplete", "search"
 	],
-	"minimum-stability" : "dev",
-	"license": "GPL-2.0",
+	"minimum-stability": "dev",
+	"license": "GPL-2.0-or-later",
 	"authors": [
 		{
 			"name": "Ismayil Khayredinov",
@@ -16,14 +16,18 @@
 		}
 	],
 	"require": {
-		 "bower-asset/jquery-tokeninput": "~1.7.0"
-	},
-	"require-dev": {
-		"composer/installers": "~1.0"
+		"php": ">=7.4",
+		"composer/installers": "^2.0",
+		"bower-asset/jquery-tokeninput": "~1.7.0"
 	},
 	"autoload": {
 		"psr-4": {
 			"hypeJunction\\Tokeninput\\": "classes/hypeJunction/Tokeninput/"
+		}
+	},
+	"extra": {
+		"elgg-plugin": {
+			"id": "elgg_tokeninput"
 		}
 	},
 	"config": {

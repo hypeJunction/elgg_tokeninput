@@ -1,6 +1,16 @@
 <?php
 
 return [
+	'plugin' => [
+		'name' => 'Tokenizing Autocomplete',
+		'version' => '5.0.0',
+		'dependencies' => [
+			'search' => [
+				'position' => 'after',
+			],
+		],
+	],
+
 	'bootstrap' => \hypeJunction\Tokeninput\Bootstrap::class,
 
 	'views' => [
