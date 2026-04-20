@@ -20,7 +20,7 @@
  * @uses $vars['sortable'] Make tokens sortable
  *
  */
-$vars['id'] = substr(md5(microtime() . rand()), 0, 10);
+$vars['id'] = bin2hex(random_bytes(5));
 
 if (!isset($vars['name'])) {
 	$vars['name'] = 'tokeninput';

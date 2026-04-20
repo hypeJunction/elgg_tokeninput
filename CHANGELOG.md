@@ -1,3 +1,20 @@
+<a name="5.1.0"></a>
+## 5.1.0 (2026-04-20)
+
+### Elgg 5.x migration
+
+* Target Elgg `^5.0` (PHP >= 8.0).
+* `'hooks'` key renamed to `'events'` in `elgg-plugin.php` (Elgg 5.x unified event system).
+* `elgg_register_plugin_hook_handler()` replaced by declarative `'events'` entry.
+* All `elgg_trigger_plugin_hook()` calls replaced with `elgg_trigger_event_results()`.
+* Action event handler signature updated to `\Elgg\Event $event`.
+* Lib loaded at `Bootstrap::load()` so event handler is callable at registration time.
+* Added missing functions: `elgg_tokeninput_page_handler()` and `elgg_tokeninput_explode_field_values()`.
+* PHP 8.0 strict fixes in `input/tokeninput.php` (undefined variable initialization).
+* DOM element ID generation changed from `md5()` to `bin2hex(random_bytes(5))`.
+* Docker test stack upgraded to PHP 8.1 / MySQL 8.0 / Elgg 5.1.x.
+* Integration test updated for Elgg 5.x session API.
+
 <a name="5.0.0"></a>
 ## 5.0.0 (2026-04-14)
 
