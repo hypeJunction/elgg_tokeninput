@@ -35,7 +35,6 @@ class Bootstrap extends PluginBootstrap {
 	public function init() {
 		Includer::requireFileOnce($this->getRoot() . '/lib/tokeninput.php');
 
-		elgg_register_plugin_hook_handler('action', 'all', 'elgg_tokeninput_explode_field_values', 1);
 	}
 
 	/**

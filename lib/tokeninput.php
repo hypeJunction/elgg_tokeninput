@@ -42,7 +42,7 @@ function elgg_tokeninput_export_entity($entity)
         $metadata[] = $entity->location;
     }
     $export = array('label' => $title, 'value' => $entity->guid, 'metadata' => !empty($metadata) ? implode('<br />', $metadata) : '', 'icon' => $icon, 'type' => $type, 'subtype' => $subtype, 'html_result' => elgg_view_exists("tokeninput/{$type}/{$subtype}") ? elgg_view("tokeninput/{$type}/{$subtype}", array('entity' => $entity, 'for' => 'result')) : null, 'html_token' => elgg_view_exists("tokeninput/{$type}/{$subtype}") ? elgg_view("tokeninput/{$type}/{$subtype}", array('entity' => $entity, 'for' => 'token')) : null);
-    $export = elgg_trigger_plugin_hook('tokeninput:entity:export', $type, array('entity' => $entity), $export);
+    $export = elgg_trigger_event_results('tokeninput:entity:export', $type, array('entity' => $entity), $export);
     array_walk_recursive($export, function (&$value) {
         $value = is_string($value) ? html_entity_decode($value, ENT_QUOTES, 'UTF-8') : $value;
     });
@@ -73,7 +73,7 @@ function elgg_tokeninput_export_metadata($metadata)
         return array();
     }
     $export = array('label' => $tag, 'value' => $tag, 'type' => $type, 'subtype' => $subtype, 'html_result' => elgg_view_exists("tokeninput/{$type}/{$subtype}") ? elgg_view("tokeninput/{$type}/{$subtype}", array('tag' => $tag, 'metadata_id' => $id, 'for' => 'result')) : null, 'html_token' => elgg_view_exists("tokeninput/{$type}/{$subtype}") ? elgg_view("tokeninput/{$type}/{$subtype}", array('tag' => $tag, 'metadata_id' => $id, 'for' => 'token')) : null);
-    $export = elgg_trigger_plugin_hook('tokeninput:entity:export', $type, array('tag' => $tag, 'metadata_id' => $id), $export);
+    $export = elgg_trigger_event_results('tokeninput:entity:export', $type, array('tag' => $tag, 'metadata_id' => $id), $export);
     array_walk_recursive($export, function (&$value) {
         $value = is_string($value) ? html_entity_decode($value, ENT_QUOTES, 'UTF-8') : $value;
     });
@@ -94,7 +94,7 @@ function elgg_tokeninput_search_all($term, $options = array())
     // Search users
     $user_options = $options;
     $user_options['query'] = $term;
-    $user_results = elgg_trigger_plugin_hook('search', 'user', $user_options, []);
+    $user_results = elgg_trigger_event_results('search', 'user', $user_options, []);
     $user_entities = elgg_extract('entities', $user_results, []);
     if (is_array($user_entities)) {
         $results = array_merge($results, $user_entities);
@@ -103,7 +103,7 @@ function elgg_tokeninput_search_all($term, $options = array())
     // Search groups
     $group_options = $options;
     $group_options['query'] = $term;
-    $group_results = elgg_trigger_plugin_hook('search', 'group', $group_options, []);
+    $group_results = elgg_trigger_event_results('search', 'group', $group_options, []);
     $group_entities = elgg_extract('entities', $group_results, []);
     if (is_array($group_entities)) {
         $results = array_merge($results, $group_entities);
@@ -118,7 +118,7 @@ function elgg_tokeninput_search_all($term, $options = array())
     if ($object_subtypes) {
         $object_options['subtypes'] = $object_subtypes;
     }
-    $object_results = elgg_trigger_plugin_hook('search', 'object', $object_options, []);
+    $object_results = elgg_trigger_event_results('search', 'object', $object_options, []);
     $object_entities = elgg_extract('entities', $object_results, []);
     if (is_array($object_entities)) {
         $results = array_merge($results, $object_entities);
@@ -137,7 +137,7 @@ function elgg_tokeninput_search_all($term, $options = array())
 function elgg_tokeninput_search_users($term, $options = array())
 {
     $options['query'] = $term;
-    $results = elgg_trigger_plugin_hook('search', 'user', $options, array());
+    $results = elgg_trigger_event_results('search', 'user', $options, array());
     return elgg_extract('entities', $results, array());
 }
 
@@ -151,7 +151,7 @@ function elgg_tokeninput_search_users($term, $options = array())
 function elgg_tokeninput_search_groups($term, $options = array())
 {
     $options['query'] = $term;
-    $results = elgg_trigger_plugin_hook('search', 'group', $options, array());
+    $results = elgg_trigger_event_results('search', 'group', $options, array());
     return elgg_extract('entities', $results, array());
 }
 
@@ -171,7 +171,7 @@ function elgg_tokeninput_search_objects($term, $options = array())
         $object_subtypes = elgg_extract('object', $entity_types, array());
         $options['subtypes'] = $object_subtypes;
     }
-    $results = elgg_trigger_plugin_hook('search', 'object', $options, array());
+    $results = elgg_trigger_event_results('search', 'object', $options, array());
     return elgg_extract('entities', $results, array());
 }
 
@@ -208,7 +208,7 @@ function elgg_tokeninput_search_friends($term, $options = array())
 
     $options['query'] = $term;
     $options['guids'] = $friend_guids;
-    $results = elgg_trigger_plugin_hook('search', 'user', $options, []);
+    $results = elgg_trigger_event_results('search', 'user', $options, []);
     return elgg_extract('entities', $results, []);
 }
 
@@ -232,7 +232,7 @@ function elgg_tokeninput_search_owned_entities($term, $options = array())
     $group_options = $options;
     $group_options['query'] = $term;
     $group_options['owner_guid'] = $user->guid;
-    $group_results = elgg_trigger_plugin_hook('search', 'group', $group_options, []);
+    $group_results = elgg_trigger_event_results('search', 'group', $group_options, []);
     $group_entities = elgg_extract('entities', $group_results, []);
     if (is_array($group_entities)) {
         $results = array_merge($results, $group_entities);
@@ -248,7 +248,7 @@ function elgg_tokeninput_search_owned_entities($term, $options = array())
     if ($object_subtypes) {
         $object_options['subtypes'] = $object_subtypes;
     }
-    $object_results = elgg_trigger_plugin_hook('search', 'object', $object_options, []);
+    $object_results = elgg_trigger_event_results('search', 'object', $object_options, []);
     $object_entities = elgg_extract('entities', $object_results, []);
     if (is_array($object_entities)) {
         $results = array_merge($results, $object_entities);
@@ -312,4 +312,83 @@ function elgg_tokeninput_get_secret()
         }
     }
     return $secret;
+}
+
+/**
+ * Page handler for tokeninput AJAX search endpoint
+ *
+ * @param array $page Page segments
+ * @return void
+ */
+function elgg_tokeninput_page_handler($page)
+{
+    $callback = urldecode(get_input('callback'));
+    if ($callback) {
+        $hmac = get_input('hmac');
+        $ts = get_input('ts');
+        if (hash_hmac('sha256', $ts . $callback, elgg_tokeninput_get_secret()) !== $hmac) {
+            header('HTTP/1.1 403 Forbidden');
+            exit;
+        }
+    } else {
+        $callback = 'elgg_tokeninput_search_all';
+    }
+    $q = urldecode(get_input('term', get_input('q', '')));
+    $strict = (bool) get_input('strict', true);
+    if (!is_callable($callback)) {
+        header('HTTP/1.1 400 Bad Request');
+        exit;
+    }
+    $results = array();
+    $options = get_input('options', array());
+    $entities = call_user_func($callback, $q, $options);
+    if (is_array($entities) && count($entities)) {
+        foreach ($entities as $entity) {
+            if ($entity instanceof \ElggEntity) {
+                $results[] = elgg_tokeninput_export_entity($entity);
+            } else if ($entity instanceof \ElggMetadata) {
+                $results[] = elgg_tokeninput_export_metadata($entity);
+            } else {
+                $results[] = (array) $entity;
+            }
+        }
+    }
+    if (!count($results) && $strict === false) {
+        $suggest = array('label' => $q, 'value' => $q, 'html_result' => '<span>' . elgg_echo('tokeninput:suggest', array($q)) . '</span>');
+        $results[] = $suggest;
+    }
+    header("Content-Type: application/json");
+    echo json_encode($results);
+    exit;
+}
+
+/**
+ * Explodes comma-separated tokeninput field values into arrays before action execution
+ *
+ * @param \Elgg\Event $event Action event
+ * @return void
+ */
+function elgg_tokeninput_explode_field_values(\Elgg\Event $event)
+{
+    $elgg_tokeninput_fields = (array) get_input('elgg_tokeninput_fields', array());
+    $elgg_tokeninput_autocomplete = (array) get_input('elgg_tokeninput_autocomplete', array());
+    if (!empty($elgg_tokeninput_fields)) {
+        foreach ($elgg_tokeninput_fields as $field_name) {
+            $values = explode(',', get_input($field_name, ''));
+            if (in_array($field_name, $elgg_tokeninput_autocomplete)) {
+                foreach ($values as $key => $value) {
+                    $user = get_entity($value);
+                    if ($user instanceof \ElggUser) {
+                        $values[$key] = $user->username;
+                    }
+                }
+                if (count($values) === 1) {
+                    $values = array_values($values)[0];
+                }
+            }
+            set_input($field_name, $values);
+        }
+    }
+    set_input('elgg_tokeninput_fields', null);
+    set_input('elgg_tokeninput_autocomplete', null);
 }

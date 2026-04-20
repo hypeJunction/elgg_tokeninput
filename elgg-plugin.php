@@ -13,6 +13,14 @@ return [
 
 	'bootstrap' => \hypeJunction\Tokeninput\Bootstrap::class,
 
+	'events' => [
+		'action' => [
+			'all' => [
+				'elgg_tokeninput_explode_field_values' => ['priority' => 1],
+			],
+		],
+	],
+
 	'views' => [
 		'default' => [
 			'jquery.tokeninput.js' => __DIR__ . '/vendor/bower-asset/jquery-tokeninput/build/jquery.tokeninput.min.js',
