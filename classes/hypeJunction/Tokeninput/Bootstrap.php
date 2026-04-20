@@ -20,6 +20,7 @@ class Bootstrap extends PluginBootstrap {
 	 */
 	public function load() {
 		Includer::requireFileOnce($this->getRoot() . '/autoloader.php');
+		Includer::requireFileOnce($this->getRoot() . '/lib/tokeninput.php');
 	}
 
 	/**
@@ -33,8 +34,6 @@ class Bootstrap extends PluginBootstrap {
 	 * {@inheritdoc}
 	 */
 	public function init() {
-		Includer::requireFileOnce($this->getRoot() . '/lib/tokeninput.php');
-
 	}
 
 	/**

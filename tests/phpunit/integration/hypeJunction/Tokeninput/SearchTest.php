@@ -43,7 +43,7 @@ class SearchTest extends IntegrationTestCase {
     public function testSearchFriendsReturnsArray(): void {
         $user1 = $this->createUser();
 
-        elgg_get_session()->setLoggedInUser($user1);
+        _elgg_services()->session_manager->setLoggedInUser($user1);
 
         $results = elgg_tokeninput_search_friends('test');
 

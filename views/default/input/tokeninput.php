@@ -61,16 +61,20 @@ foreach ($value as $selected) {
 $vars['data-pre-populate'] = json_encode($values);
 
 // Limit number of possible values
+$limit = null;
 if (isset($vars['limit'])) {
 	$limit = elgg_extract('limit', $vars, null);
 	unset($vars['limit']);
 }
-$vars['data-token-limit'] = (!$vars['multiple']) ? 1 : $limit;
+$multiple = elgg_extract('multiple', $vars, false);
+unset($vars['multiple']);
+$vars['data-token-limit'] = (!$multiple) ? 1 : $limit;
 if (elgg_extract('sortable', $vars, false) && $vars['data-token-limit'] !== 1) {
 	$vars['data-sortable'] = true;
 }
 
 // Prepare query
+$query = [];
 if (isset($vars['query'])) {
 	$query = elgg_extract('query', $vars);
 	unset($vars['query']);
