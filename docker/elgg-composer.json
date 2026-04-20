@@ -4,9 +4,9 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "elgg/elgg": "4.3.6",
+        "elgg/elgg": "~5.1.0",
         "composer/installers": "^1.0 || ^2.0",
-        "phpunit/phpunit": "~9.5"
+        "phpunit/phpunit": "^9.6"
     },
     "replace": {
         "roave/security-advisories": "dev-master"

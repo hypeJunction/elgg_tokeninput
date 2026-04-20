@@ -1,4 +1,4 @@
-FROM php:7.4-apache
+FROM php:8.1-apache
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -36,7 +36,7 @@ WORKDIR /var/www/html
 # Create Elgg data directory
 RUN mkdir -p /var/www/data && chown www-data:www-data /var/www/data
 
-# Install Elgg 4.x
+# Install Elgg 5.x
 COPY elgg-composer.json /var/www/html/composer.json
 RUN cd /var/www/html && composer install --no-interaction --prefer-dist
 
