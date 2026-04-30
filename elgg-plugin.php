@@ -3,7 +3,7 @@
 return [
 	'plugin' => [
 		'name' => 'Tokenizing Autocomplete',
-		'version' => '5.0.0',
+		'version' => '5.1.0',
 		'dependencies' => [
 			'search' => [
 				'position' => 'after',
