@@ -1,0 +1,89 @@
+name: Lint
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+concurrency:
+  group: lint-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Fast-feedback checks that don't need a database. Each job is independent
+# so a single failure doesn't hide the others.
+
+jobs:
+  php-syntax:
+    name: PHP ${{ matrix.php-version }} syntax
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        # Span the PHP versions Elgg 3.x → 7.x supports. A plugin only has
+        # to parse on the version its composer.json targets — drop the
+        # rows that don't apply.
+        php-version: ['7.4', '8.1', '8.3']
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          coverage: none
+
+      - name: php -l on every tracked .php file
+        run: |
+          ec=0
+          while IFS= read -r f; do
+            if ! out=$(php -l "$f" 2>&1); then
+              echo "$out"
+              ec=1
+            fi
+          done < <(git ls-files '*.php' | grep -Ev '^(vendor|node_modules)/')
+          exit $ec
+
+  composer-validate:
+    name: composer validate
+    runs-on: ubuntu-24.04
+    if: hashFiles('composer.json') != ''
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+      - run: composer validate --strict --no-check-publish
+
+  json:
+    name: JSON files
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate every tracked .json file
+        run: |
+          ec=0
+          while IFS= read -r f; do
+            if ! python3 -m json.tool "$f" > /dev/null 2>&1; then
+              echo "INVALID JSON: $f"
+              ec=1
+            fi
+          done < <(git ls-files '*.json' | grep -Ev '^(vendor|node_modules)/')
+          exit $ec
+
+  workflow-yaml:
+    name: Workflow YAML
+    runs-on: ubuntu-24.04
+    if: hashFiles('.github/workflows/*.yml', '.github/workflows/*.yaml') != ''
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate workflow YAML
+        run: |
+          ec=0
+          for f in .github/workflows/*.yml .github/workflows/*.yaml; do
+            [ -e "$f" ] || continue
+            if ! python3 -c "import sys, yaml; yaml.safe_load(open(sys.argv[1]))" "$f" 2>&1; then
+              echo "INVALID YAML: $f"
+              ec=1
+            fi
+          done
+          exit $ec

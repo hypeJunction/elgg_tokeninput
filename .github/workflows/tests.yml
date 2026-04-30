@@ -1,0 +1,170 @@
+name: Tests
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+concurrency:
+  group: tests-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Runs PHPUnit and Playwright against the per-plugin docker stack that
+# elgg-test-writer scaffolds at <plugin>/docker/. The runner does not
+# install PHP, MySQL, or Elgg natively — `docker compose up` boots the
+# same stack a developer uses locally, so green CI = green local.
+#
+# Both jobs key off file presence (hashFiles): if the plugin has no
+# Playwright suite, the playwright job is silently skipped.
+
+jobs:
+  phpunit:
+    name: PHPUnit
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    if: hashFiles('docker/docker-compose.yml', 'tests/phpunit.xml') != ''
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve PLUGIN_ID
+        run: |
+          PLUGIN_ID="$(jq -r '.extra["elgg-plugin"].id // ""' composer.json 2>/dev/null || true)"
+          if [ -z "$PLUGIN_ID" ] || [ "$PLUGIN_ID" = "null" ]; then
+            name="$(jq -r '.name // ""' composer.json 2>/dev/null || true)"
+            PLUGIN_ID="${name##*/}"
+          fi
+          PLUGIN_ID="$(printf '%s' "$PLUGIN_ID" | tr '[:upper:]' '[:lower:]')"
+          if [ -z "$PLUGIN_ID" ]; then
+            PLUGIN_ID="$(basename "$GITHUB_REPOSITORY" | tr '[:upper:]' '[:lower:]')"
+          fi
+          echo "PLUGIN_ID=$PLUGIN_ID" >> "$GITHUB_ENV"
+          mkdir -p docker
+          echo "PLUGIN_ID=$PLUGIN_ID" > docker/.env
+
+      - name: Boot stack
+        run: docker compose -f docker/docker-compose.yml up -d
+
+      - name: Wait for Elgg install
+        run: |
+          for i in $(seq 1 120); do
+            if docker compose -f docker/docker-compose.yml exec -T elgg test -f /var/www/html/.elgg-installed 2>/dev/null; then
+              echo "Elgg installed."
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "::error::Elgg installation did not complete within 240s"
+          docker compose -f docker/docker-compose.yml logs elgg
+          exit 1
+
+      - name: Install PHPUnit
+        run: |
+          # Elgg 3.x/4.x → PHP 7.4 → PHPUnit 9.x
+          # Elgg 5.x+    → PHP 8.1+ → PHPUnit 10.x (override below if needed)
+          docker compose -f docker/docker-compose.yml exec -T elgg \
+            composer require --dev phpunit/phpunit:^9.6 --no-interaction
+
+      - name: Create test DB tables
+        run: |
+          docker compose -f docker/docker-compose.yml exec -T elgg php -r '
+          $pdo = new PDO("mysql:host=db;dbname=elgg", "elgg", "elgg");
+          $tables = $pdo->query("SHOW TABLES LIKE \"elgg_%\"")->fetchAll(PDO::FETCH_COLUMN);
+          foreach ($tables as $t) {
+              $new = str_replace("elgg_", "c_i_elgg_", $t);
+              $pdo->exec("DROP TABLE IF EXISTS $new");
+              $r = $pdo->query("SHOW CREATE TABLE $t")->fetch(PDO::FETCH_ASSOC);
+              $pdo->exec(str_replace($t, $new, $r["Create Table"]));
+          }
+          foreach (["config","entities","metadata","private_settings","entity_relationships"] as $t) {
+              $pdo->exec("INSERT INTO c_i_elgg_$t SELECT * FROM elgg_$t");
+          }
+          echo "Test tables ready." . PHP_EOL;
+          '
+
+      - name: Run PHPUnit
+        run: |
+          docker compose -f docker/docker-compose.yml exec -T elgg \
+            vendor/bin/phpunit \
+              --configuration "mod/${PLUGIN_ID}/tests/phpunit.xml" \
+              --no-coverage
+
+      - name: Collect diagnostics
+        if: failure()
+        run: |
+          mkdir -p ci-artifacts
+          docker compose -f docker/docker-compose.yml logs --no-color > ci-artifacts/compose.log 2>&1 || true
+          docker compose -f docker/docker-compose.yml exec -T elgg \
+            sh -c 'cat /var/log/apache2/error.log 2>/dev/null' > ci-artifacts/apache-error.log 2>&1 || true
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: phpunit-diagnostics
+          path: ci-artifacts/
+          if-no-files-found: ignore
+
+  playwright:
+    name: Playwright
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    if: hashFiles('docker/docker-compose.yml', 'tests/playwright/package.json') != ''
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve PLUGIN_ID
+        run: |
+          PLUGIN_ID="$(jq -r '.extra["elgg-plugin"].id // ""' composer.json 2>/dev/null || true)"
+          if [ -z "$PLUGIN_ID" ] || [ "$PLUGIN_ID" = "null" ]; then
+            name="$(jq -r '.name // ""' composer.json 2>/dev/null || true)"
+            PLUGIN_ID="${name##*/}"
+          fi
+          PLUGIN_ID="$(printf '%s' "$PLUGIN_ID" | tr '[:upper:]' '[:lower:]')"
+          if [ -z "$PLUGIN_ID" ]; then
+            PLUGIN_ID="$(basename "$GITHUB_REPOSITORY" | tr '[:upper:]' '[:lower:]')"
+          fi
+          echo "PLUGIN_ID=$PLUGIN_ID" >> "$GITHUB_ENV"
+          mkdir -p docker
+          echo "PLUGIN_ID=$PLUGIN_ID" > docker/.env
+
+      - name: Boot stack
+        run: docker compose -f docker/docker-compose.yml up -d
+
+      - name: Wait for Elgg install
+        run: |
+          for i in $(seq 1 120); do
+            if docker compose -f docker/docker-compose.yml exec -T elgg test -f /var/www/html/.elgg-installed 2>/dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          docker compose -f docker/docker-compose.yml logs elgg
+          exit 1
+
+      - name: Run Playwright
+        run: |
+          docker compose -f docker/docker-compose.yml --profile test run --rm node sh -c '
+            cd /plugin/tests/playwright && npm ci && npx playwright test --reporter=list,html
+          '
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: tests/playwright/playwright-report/
+          if-no-files-found: ignore
+
+      - name: Collect diagnostics
+        if: failure()
+        run: |
+          mkdir -p ci-artifacts
+          docker compose -f docker/docker-compose.yml logs --no-color > ci-artifacts/compose.log 2>&1 || true
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-diagnostics
+          path: ci-artifacts/
+          if-no-files-found: ignore
