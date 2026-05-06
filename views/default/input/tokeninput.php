@@ -4,7 +4,7 @@
  *
  * You can change the default configuration of the autocomplete instance by, prefixing the configuration parameter with data- and hyphenating capitalized parameter names, e.g.
  * to modify the hintText value, use $vars['data-hint-text']
- * 
+ *
  * @uses $vars['class'] Optional. Additional CSS class
  * @uses $vars['name'] Input name
  * @uses $vars['value'] Current value (a guid, an array of guids or an array of entities or an array of tags)
@@ -30,21 +30,21 @@ if (!isset($vars['name'])) {
 if (isset($vars['class'])) {
 	$vars['class'] = "elgg-input-tokeninput {$vars['class']}";
 } else {
-	$vars['class'] = "elgg-input-tokeninput";
+	$vars['class'] = 'elgg-input-tokeninput';
 }
 
 // Set input type
 $vars['type'] = 'text';
 
 // Prepare values
-$value = elgg_extract('value', $vars, array());
+$value = elgg_extract('value', $vars, []);
 if ($value) {
 	if (is_string($value)) {
 		$delimiter = elgg_extract('data-token-delimiter', $vars, ',');
 		$value = explode($delimiter, $value);
 	}
 } else {
-	$value = array();
+	$value = [];
 }
 
 $values = [];
@@ -56,8 +56,10 @@ foreach ($value as $selected) {
 			$selected = $user;
 		}
 	}
+
 	$values[] = elgg_tokeninput_export_entity($selected);
 }
+
 $vars['data-pre-populate'] = json_encode($values);
 
 // Limit number of possible values
@@ -66,6 +68,7 @@ if (isset($vars['limit'])) {
 	$limit = elgg_extract('limit', $vars, null);
 	unset($vars['limit']);
 }
+
 $multiple = elgg_extract('multiple', $vars, false);
 unset($vars['multiple']);
 $vars['data-token-limit'] = (!$multiple) ? 1 : $limit;
@@ -81,9 +84,9 @@ if (isset($vars['query'])) {
 }
 
 if ($query && !is_array($query)) {
-	$query = array($query);
+	$query = [$query];
 } else if (empty($query)) {
-	$query = array();
+	$query = [];
 }
 
 // Add strict mode value to the URL query
@@ -112,15 +115,15 @@ unset($vars['autoexplode']);
 
 if ($autoexplode) {
 	// Add a hidden field to use in the action hook to unserialize the values
-	echo elgg_view('input/hidden', array(
+	echo elgg_view('input/hidden', [
 		'name' => 'elgg_tokeninput_fields[]',
 		'value' => $vars['name']
-	));
+	]);
 	if (!empty($vars['is_elgg_autocomplete'])) {
-		echo elgg_view('input/hidden', array(
+		echo elgg_view('input/hidden', [
 			'name' => 'elgg_tokeninput_autocomplete[]',
 			'value' => $vars['name']
-		));
+		]);
 	}
 }
 

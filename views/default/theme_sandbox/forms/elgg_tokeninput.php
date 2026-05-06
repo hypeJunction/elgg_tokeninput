@@ -1,51 +1,56 @@
+<?php
+/**
+ * Theme sandbox demo for elgg_tokeninput input fields.
+ */
+?>
 <form action="#">
 	<fieldset>
 		<legend>Tokeninput Fields</legend>
 		<div>
 			<label for="tk1">Users tokeninput:</label>
 			<?php
-			echo elgg_view('input/tokeninput/users', array(
+			echo elgg_view('input/tokeninput/users', [
 				'name' => 'tk1',
 				'id' => 'tk1',
-			));
+			]);
 			?>
 		</div>
 		<div>
 			<label for="tk1">Users tokeninput (multiple):</label>
 			<?php
-			echo elgg_view('input/tokeninput/users', array(
+			echo elgg_view('input/tokeninput/users', [
 				'name' => 'tk1-m',
 				'id' => 'tk1-m',
 				'multiple' => true,
-			));
+			]);
 			?>
 		</div>
 		<div>
 			<label for="tk2">Friends tokeninput:</label>
 			<?php
-			echo elgg_view('input/tokeninput/friends', array(
+			echo elgg_view('input/tokeninput/friends', [
 				'name' => 'tk2',
 				'id' => 'tk2',
-			));
+			]);
 			?>
 		</div>
 		<div>
 			<label for="tk3">Groups tokeninput:</label>
 			<?php
-			echo elgg_view('input/tokeninput/groups', array(
+			echo elgg_view('input/tokeninput/groups', [
 				'name' => 'tk3',
 				'id' => 'tk3',
-			));
+			]);
 			?>
 		</div>
 		<div>
 			<label for="tk4">Objects tokeninput:</label>
 			<?php
-			echo elgg_view('input/tokeninput/objects', array(
+			echo elgg_view('input/tokeninput/objects', [
 				'name' => 'tk4',
 				'id' => 'tk4',
-				'subtype' => array('blog', 'bookmarks', 'file'),
-			));
+				'subtype' => ['blog', 'bookmarks', 'file'],
+			]);
 			?>
 		</div>
 	</fieldset>

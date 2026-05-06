@@ -64,8 +64,7 @@ define(['elgg', 'jquery', 'jquery.tokeninput'], function (elgg, $) {
 		 * @returns {String|Bool|@var;value|Object}
 		 */
 		resultsFormatter: function (item) {
-			var html = (item.html_result) ? '<li>' + item.html_result + '</li>' :
-					'<li><div class="elgg-image-block elgg-tokeninput-suggestion">\n\
+			var html = (item.html_result) ? '<li>' + item.html_result + '</li>' : '<li><div class="elgg-image-block elgg-tokeninput-suggestion">\n\
 					<div class="elgg-image">' + ((item.icon) ? item.icon : '') + '</div>\n\
 					<div class="elgg-body">' + ((item.label) ? item.label : '') + '<br />\n\
 						<span class="elgg-subtext">' + ((item.metadata) ? item.metadata : '') + '</span>\n\
@@ -80,8 +79,7 @@ define(['elgg', 'jquery', 'jquery.tokeninput'], function (elgg, $) {
 		 * @returns {String|Bool|@var;value|Object}
 		 */
 		tokenFormatter: function (item) {
-			var html = (item.html_token) ? '<li><p>' + item.html_token + '</p></li>' :
-					'<li><p><div class="elgg-image-block elgg-tokeninput-token">\n\
+			var html = (item.html_token) ? '<li><p>' + item.html_token + '</p></li>' : '<li><p><div class="elgg-image-block elgg-tokeninput-token">\n\
 					<div class="elgg-image">' + ((item.icon) ? item.icon : '') + '</div>\n\
 					<div class="elgg-body">' + ((item.label) ? item.label : '') + '</div>\n\
 			</div></p></li>';

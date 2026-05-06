@@ -6,7 +6,7 @@
  */
 $vars['callback'] = 'elgg_tokeninput_search_objects';
 
-$subtype = elgg_extract('subtype', $vars, array());
+$subtype = elgg_extract('subtype', $vars, []);
 if ($subtype) {
 	$vars['query']['options']['subtypes'] = $subtype;
 }

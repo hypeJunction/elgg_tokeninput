@@ -40,6 +40,9 @@ RUN mkdir -p /var/www/data && chown www-data:www-data /var/www/data
 COPY elgg-composer.json /var/www/html/composer.json
 RUN cd /var/www/html && composer install --no-interaction --prefer-dist
 
+# Register Elgg coding standard with phpcs
+RUN vendor/bin/phpcs --config-set installed_paths /var/www/html/vendor/elgg/sniffs/src
+
 # Apache config: allow .htaccess overrides
 RUN sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
 

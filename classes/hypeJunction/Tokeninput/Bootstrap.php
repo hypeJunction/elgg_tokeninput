@@ -5,6 +5,9 @@ namespace hypeJunction\Tokeninput;
 use Elgg\Includer;
 use Elgg\PluginBootstrap;
 
+/**
+ * Plugin bootstrap for elgg_tokeninput.
+ */
 class Bootstrap extends PluginBootstrap {
 
 	/**
@@ -27,7 +30,6 @@ class Bootstrap extends PluginBootstrap {
 	 * {@inheritdoc}
 	 */
 	public function boot() {
-
 	}
 
 	/**
@@ -40,35 +42,29 @@ class Bootstrap extends PluginBootstrap {
 	 * {@inheritdoc}
 	 */
 	public function ready() {
-
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
 	public function shutdown() {
-
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
 	public function activate() {
-
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
 	public function deactivate() {
-
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
 	public function upgrade() {
-
 	}
-
 }
