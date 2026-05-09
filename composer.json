@@ -3,7 +3,7 @@
 	"version": "5.1.0",
 	"type": "elgg-plugin",
 	"description": "Tokenizing autocomplete for Elgg",
-	"homepage": "http://hypejunction.com",
+	"homepage": "https://github.com/hypeJunction/elgg_tokeninput",
 	"keywords": [
 		"elgg",
 		"plugin",
@@ -12,12 +12,6 @@
 	],
 	"minimum-stability": "dev",
 	"license": "GPL-2.0-or-later",
-	"authors": [
-		{
-			"name": "Ismayil Khayredinov",
-			"email": "info@hypejunction.com"
-		}
-	],
 	"require": {
 		"php": ">=8.0",
 		"composer/installers": "^2.0",
