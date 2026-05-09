@@ -1,3 +1,16 @@
+## [6.0.0] — Elgg 6.x migration (2026-05-09)
+
+- Migrated to Elgg 6.x (5.x → 6.x). Requires PHP 8.0+.
+- Bumped `elgg/elgg` constraint to `^6.0`.
+- AMD JS removed: `components/tokeninput.js` converted from AMD `define()` to ES module.
+- `elgg.trigger_hook()` → `trigger()` from `elgg/hooks` in JS formatters.
+- `elgg.echo()` → `echo()` from `elgg/i18n`.
+- Inline `require(['tokeninput/lib'], ...)` in `tokeninput/require.php` → `elgg_import_esm()`.
+- Inline AMD `require(['jquery-ui/widgets/sortable'], ...)` → dynamic `import()`.
+- Docker stack upgraded to Elgg 6.x, PHPUnit ~10.5.
+
+---
+
 <a name="5.1.0"></a>
 ## 5.1.0 (2026-04-20)
 

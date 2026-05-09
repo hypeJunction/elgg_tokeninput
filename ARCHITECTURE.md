@@ -1,4 +1,4 @@
-# elgg_tokeninput — Architecture (Elgg 5.x)
+# elgg_tokeninput — Architecture (Elgg 6.x)
 
 ## Summary
 

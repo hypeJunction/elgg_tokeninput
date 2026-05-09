@@ -1,5 +1,2 @@
-<script>
-	require(['tokeninput/lib'], function (tokeninput) {
-		tokeninput.init();
-	});
-</script>
+<?php
+elgg_import_esm('js/components/tokeninput');

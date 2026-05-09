@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# Per-plugin Elgg 5.x install + activation script.
+# Per-plugin Elgg 6.x install + activation script.
 # PLUGIN_ID must be set in the container environment (passed by docker-compose
 # from <plugin>/docker/.env). Only that one plugin is activated — no fleet
 # activation, no plugin-order.txt, no cross-plugin side effects.
@@ -34,7 +34,7 @@ if [ -d /var/www/html/vendor/elgg/elgg/mod ]; then
 fi
 
 if [ ! -f /var/www/html/.elgg-installed ]; then
-    echo "Installing Elgg 5.x..."
+    echo "Installing Elgg 6.x..."
 
     mkdir -p elgg-config
     cat > elgg-config/settings.php <<'SETTINGS_TEMPLATE'
@@ -81,7 +81,7 @@ SETTINGS_VALUES
 
         \$installer = new \ElggInstaller();
         \$installer->batchInstall(\$params);
-        echo 'Elgg 5.x installed successfully.' . PHP_EOL;
+        echo 'Elgg 6.x installed successfully.' . PHP_EOL;
     " 2>&1 || echo "Install completed (check for errors above)."
 
     echo "Activating plugins..."
@@ -92,7 +92,7 @@ SETTINGS_VALUES
         _elgg_services()->plugins->generateEntities();
 
         // Resolve dep plugin IDs from the plugin's own metadata.
-        // Priority: elgg-plugin.php 'plugin.dependencies' (Elgg 5.x).
+        // Priority: elgg-plugin.php 'plugin.dependencies' (Elgg 6.x).
         // IDs are lowercased to match mod/ directory names.
         // Deps not present in mod/ are skipped with a warning — this naturally excludes
         // deps that are unsafe to activate (e.g. unmigrated plugins not volume-mounted).
@@ -152,7 +152,7 @@ SETTINGS_VALUES
     chmod -R u+rwX,g+rX,o+rX "${ELGG_DATA_ROOT:-/var/www/data/}"
 
     touch /var/www/html/.elgg-installed
-    echo "Elgg 5.x setup complete."
+    echo "Elgg 6.x setup complete."
 fi
 
 echo "Starting Apache..."
