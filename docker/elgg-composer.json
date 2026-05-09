@@ -4,7 +4,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "elgg/elgg": "^6.0",
+        "elgg/elgg": "^7.0",
         "composer/installers": "^1.0 || ^2.0",
         "phpunit/phpunit": "~10.5"
     },
