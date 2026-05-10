@@ -1,37 +1,43 @@
 {
-	"name": "hypejunction/elgg_tokeninput",
-	"version": "6.0.0",
-	"type": "elgg-plugin",
-	"description": "Tokenizing autocomplete for Elgg",
-	"homepage": "https://github.com/hypeJunction/elgg_tokeninput",
-	"keywords": [
-		"elgg",
-		"plugin",
-		"autocomplete",
-		"search"
-	],
-	"minimum-stability": "dev",
-	"license": "GPL-2.0-or-later",
-	"require": {
-		"php": ">=8.3",
-		"ext-intl": "*",
-		"composer/installers": "^2.0",
-		"bower-asset/jquery-tokeninput": "~1.7.0",
-		"elgg/elgg": "~7.0.0"
-	},
-	"autoload": {
-		"psr-4": {
-			"hypeJunction\\Tokeninput\\": "classes/hypeJunction/Tokeninput/"
-		}
-	},
-	"extra": {
-		"elgg-plugin": {
-			"id": "elgg_tokeninput"
-		}
-	},
-	"config": {
-		"allow-plugins": {
-			"composer/installers": true
-		}
-	}
+    "name": "hypejunction/elgg_tokeninput",
+    "version": "6.0.0",
+    "type": "elgg-plugin",
+    "description": "Tokenizing autocomplete for Elgg",
+    "homepage": "https://github.com/hypeJunction/elgg_tokeninput",
+    "keywords": [
+        "elgg",
+        "plugin",
+        "autocomplete",
+        "search"
+    ],
+    "minimum-stability": "dev",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=8.3",
+        "ext-intl": "*",
+        "composer/installers": "^2.0",
+        "bower-asset/jquery-tokeninput": "~1.7.0",
+        "elgg/elgg": "~7.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "hypeJunction\\Tokeninput\\": "classes/hypeJunction/Tokeninput/"
+        }
+    },
+    "extra": {
+        "elgg-plugin": {
+            "id": "elgg_tokeninput"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
+    },
+    "authors": [
+        {
+            "name": "Ismayil Khayredinov",
+            "email": "ismayil.khayredinov@gmail.com"
+        }
+    ]
 }
