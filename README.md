@@ -20,7 +20,11 @@ Download the zip, extract into your Elgg `mod/` directory, and activate in the a
 
 | Plugin version | Elgg version |
 |---|---|
-| current | 7.x |
+| 7.0.0 | 7.x |
+| 6.0.0 | 6.x |
+| 5.0.0 | 5.x |
+| 4.0.0 | 4.x |
+| 3.0.0 | 3.x |
 
 ## License
 
