@@ -168,3 +168,17 @@ jobs:
           name: playwright-diagnostics
           path: ci-artifacts/
           if-no-files-found: ignore
+
+  ci:
+    name: CI
+    runs-on: ubuntu-24.04
+    needs: [phpunit, playwright]
+    if: always()
+    steps:
+      - name: All checks passed
+        run: |
+          if [[ "${{ contains(needs.*.result, 'failure') }}" == "true" ]]; then
+            exit 1
+          fi
+          echo "CI passed (jobs may have been skipped)"
+
