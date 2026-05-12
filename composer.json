@@ -14,7 +14,7 @@
 	"license": "GPL-2.0-or-later",
 	"require": {
 		"composer/installers": "^2.0",
-		"php": ">=8.2",
+		"php": ">=8.1",
 		"elgg/elgg": "^6.0",
 		"bower-asset/jquery-tokeninput": "~1.7.0"
 	},
