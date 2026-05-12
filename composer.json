@@ -5,9 +5,12 @@
 	"description": "Tokenizing autocomplete for Elgg",
 	"homepage": "http://hypejunction.com",
 	"keywords": [
-		"elgg", "plugin", "autocomplete", "search"
+		"elgg",
+		"plugin",
+		"autocomplete",
+		"search"
 	],
-	"minimum-stability" : "dev",
+	"minimum-stability": "dev",
 	"license": "GPL-2.0",
 	"authors": [
 		{
@@ -16,7 +19,9 @@
 		}
 	],
 	"require": {
-		 "bower-asset/jquery-tokeninput": "~1.7.0"
+		"php": ">=7.2",
+		"elgg/elgg": "^3.0",
+		"bower-asset/jquery-tokeninput": "~1.7.0"
 	},
 	"require-dev": {
 		"composer/installers": "~1.0"

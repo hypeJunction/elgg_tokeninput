@@ -1,0 +1,85 @@
+services:
+  elgg:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      # Mount the plugin being tested into mod/
+      # Override PLUGIN_PATH env var or mount manually:
+      #   -v ./tmp/hypeWall:/var/www/html/mod/hypeWall
+      - elgg-data:/var/www/data
+    environment:
+      ELGG_DB_HOST: db
+      ELGG_DB_NAME: elgg
+      ELGG_DB_USER: elgg
+      ELGG_DB_PASS: elgg
+      # Default site URL is the in-Docker-network DNS name so the `node`
+      # profile (Playwright, Vitest) can reach Elgg via http://elgg without
+      # Host-header rewriting. Apache itself doesn't enforce the Host header,
+      # so host-port access from the developer's shell still works against
+      # http://localhost:${ELGG_PORT}/. Override via .env or compose override
+      # for production-like tests where the URL must match a public hostname.
+      ELGG_SITE_URL: "${ELGG_SITE_URL:-http://elgg/}"
+      ELGG_DATA_ROOT: "/var/www/data/"
+      ELGG_ADMIN_EMAIL: "admin@example.com"
+      ELGG_ADMIN_PASSWORD: "admin12345"
+    ports:
+      - "${ELGG_PORT}:80"
+    depends_on:
+      db:
+        condition: service_healthy
+    entrypoint: /usr/local/bin/elgg-install.sh
+
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: elgg
+      MYSQL_USER: elgg
+      MYSQL_PASSWORD: elgg
+      MYSQL_ROOT_PASSWORD: root
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - db-data:/var/lib/mysql
+    ports:
+      - "${DB_PORT:?DB_PORT must be set (create a .env with ELGG_PORT and DB_PORT, or use bin/elgg-migrate-run)}:3306"
+
+  # Node.js + Playwright for running Playwright and Vitest tests inside Docker.
+  # Activated via --profile test so it doesn't start with `docker compose up`.
+  #
+  # Usage:
+  #   # Playwright tests (browser-level, against running Elgg)
+  #   docker compose --profile test run --rm node sh -c \
+  #     "cd /plugins/<plugin>/tests/playwright && npm ci && npx playwright test"
+  #
+  #   # Vitest (JS unit tests, no Elgg needed)
+  #   docker compose --profile test run --rm node sh -c \
+  #     "cd /plugins/<plugin> && npm ci && npm run test:js"
+  #
+  # Networking: this container shares the Docker network with elgg and db,
+  # so Playwright tests should use ELGG_BASE_URL=http://elgg (not localhost)
+  # and DB connections should use host=db port=3306 (not host-mapped ports).
+  node:
+    image: mcr.microsoft.com/playwright:v1.49.0-noble
+    volumes:
+      - ${PLUGINS_DIR:?PLUGINS_DIR must be set by the orchestrator}/${PLUGIN_ID:?set PLUGIN_ID to the plugin under test}:/plugins/${PLUGIN_ID}
+    working_dir: /plugins/${PLUGIN_ID}
+    environment:
+      ELGG_BASE_URL: "http://elgg"
+      ELGG_PORT: "80"
+      ELGG_DB_HOST: db
+      ELGG_DB_PORT: "3306"
+      ELGG_DB_USER: elgg
+      ELGG_DB_PASS: elgg
+      ELGG_DB_NAME: elgg
+    depends_on:
+      - elgg
+    profiles:
+      - test
+
+volumes:
+  elgg-data:
+  db-data:
