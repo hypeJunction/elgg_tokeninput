@@ -51,7 +51,7 @@ $values = [];
 foreach ($value as $selected) {
 	if (!empty($vars['is_elgg_autocomplete'])) {
 		// Elgg autocomplete uses usernames
-		$user = get_user_by_username($selected);
+		$user = elgg_get_user_by_username($selected);
 		if ($user) {
 			$selected = $user;
 		}
