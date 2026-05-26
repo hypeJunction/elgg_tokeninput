@@ -22,7 +22,7 @@ class ViewTest extends IntegrationTestCase {
     public function down() {}
 
     public function testTokeninputViewRenders(): void {
-        $output = elgg_view('input/tokeninput', [
+        $output = \elgg_view('input/tokeninput', [
             'name' => 'test',
         ]);
 
@@ -31,7 +31,7 @@ class ViewTest extends IntegrationTestCase {
     }
 
     public function testUserpickerViewRenders(): void {
-        $output = elgg_view('input/userpicker', [
+        $output = \elgg_view('input/userpicker', [
             'name' => 'test',
         ]);
 
@@ -40,7 +40,7 @@ class ViewTest extends IntegrationTestCase {
     }
 
     public function testTagsViewRenders(): void {
-        $output = elgg_view('input/tokeninput', [
+        $output = \elgg_view('input/tokeninput', [
             'name' => 'tags',
             'callback' => 'elgg_tokeninput_search_tags',
         ]);

@@ -24,7 +24,7 @@ class ExportTest extends IntegrationTestCase {
     public function testExportUser(): void {
         $user = $this->createUser();
 
-        $export = elgg_tokeninput_export_entity($user);
+        $export = \elgg_tokeninput_export_entity($user);
 
         $this->assertIsArray($export);
         // Label contains display name and username
@@ -40,7 +40,7 @@ class ExportTest extends IntegrationTestCase {
             'owner_guid' => $user->guid,
         ]);
 
-        $export = elgg_tokeninput_export_entity($group);
+        $export = \elgg_tokeninput_export_entity($group);
 
         $this->assertIsArray($export);
         $this->assertEquals('Token Test Group', $export['label']);
@@ -56,7 +56,7 @@ class ExportTest extends IntegrationTestCase {
             'owner_guid' => $user->guid,
         ]);
 
-        $export = elgg_tokeninput_export_entity($object);
+        $export = \elgg_tokeninput_export_entity($object);
 
         $this->assertIsArray($export);
         $this->assertEquals($object->guid, $export['value']);
@@ -67,7 +67,7 @@ class ExportTest extends IntegrationTestCase {
     public function testExportEntityHasRequiredKeys(): void {
         $user = $this->createUser();
 
-        $export = elgg_tokeninput_export_entity($user);
+        $export = \elgg_tokeninput_export_entity($user);
 
         $requiredKeys = ['label', 'value', 'metadata', 'icon', 'type', 'subtype', 'html_result', 'html_token'];
         foreach ($requiredKeys as $key) {
@@ -84,7 +84,7 @@ class ExportTest extends IntegrationTestCase {
 
         $object->tags = 'testtag';
 
-        $metadataArray = elgg_get_metadata([
+        $metadataArray = \elgg_get_metadata([
             'guid' => $object->guid,
             'metadata_names' => ['tags'],
             'limit' => 1,
@@ -93,7 +93,7 @@ class ExportTest extends IntegrationTestCase {
         $this->assertNotEmpty($metadataArray, 'Metadata should exist');
 
         $metadata = $metadataArray[0];
-        $export = elgg_tokeninput_export_metadata($metadata);
+        $export = \elgg_tokeninput_export_metadata($metadata);
 
         $this->assertIsArray($export);
         $this->assertEquals('testtag', $export['label']);
@@ -102,7 +102,7 @@ class ExportTest extends IntegrationTestCase {
     }
 
     public function testExportMetadataWithString(): void {
-        $export = elgg_tokeninput_export_metadata('sometag');
+        $export = \elgg_tokeninput_export_metadata('sometag');
 
         $this->assertIsArray($export);
         $this->assertEquals('sometag', $export['label']);
