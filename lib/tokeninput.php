@@ -10,7 +10,7 @@
  */
 function elgg_tokeninput_export_entity($entity) {
 	if (!$entity instanceof \ElggEntity) {
-		$entity_from_guid = get_entity($entity);
+		$entity_from_guid = is_numeric($entity) ? get_entity((int) $entity) : null;
 		if ($entity_from_guid) {
 			$entity = $entity_from_guid;
 		} else {
@@ -383,7 +383,7 @@ function elgg_tokeninput_explode_field_values(\Elgg\Event $event) {
 			$values = explode(',', get_input($field_name, ''));
 			if (in_array($field_name, $elgg_tokeninput_autocomplete)) {
 				foreach ($values as $key => $value) {
-					$user = get_entity($value);
+					$user = is_numeric($value) ? get_entity((int) $value) : null;
 					if ($user instanceof \ElggUser) {
 						$values[$key] = $user->username;
 					}
