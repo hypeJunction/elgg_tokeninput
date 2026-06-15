@@ -95,11 +95,16 @@ function elgg_tokeninput_export_metadata($metadata) {
 function elgg_tokeninput_search_all($term, $options = []) {
 	$results = [];
 
+	// Elgg 3.0 rewrote search to be query-based: the legacy search hook/event no
+	// longer returns an entities array, so the 2.x pattern returned nothing
+	// (autocomplete silently empty). elgg_search() runs the query and returns
+	// the matching entities.
+
 	// Search users
 	$user_options = $options;
 	$user_options['query'] = $term;
-	$user_results = elgg_trigger_event_results('search', 'user', $user_options, []);
-	$user_entities = elgg_extract('entities', $user_results, []);
+	$user_options['type'] = 'user';
+	$user_entities = elgg_search($user_options);
 	if (is_array($user_entities)) {
 		$results = array_merge($results, $user_entities);
 	}
@@ -107,8 +112,8 @@ function elgg_tokeninput_search_all($term, $options = []) {
 	// Search groups
 	$group_options = $options;
 	$group_options['query'] = $term;
-	$group_results = elgg_trigger_event_results('search', 'group', $group_options, []);
-	$group_entities = elgg_extract('entities', $group_results, []);
+	$group_options['type'] = 'group';
+	$group_entities = elgg_search($group_options);
 	if (is_array($group_entities)) {
 		$results = array_merge($results, $group_entities);
 	}
@@ -116,15 +121,14 @@ function elgg_tokeninput_search_all($term, $options = []) {
 	// Search objects
 	$object_options = $options;
 	$object_options['query'] = $term;
-	$object_options['types'] = 'object';
+	$object_options['type'] = 'object';
 	$entity_types = elgg_entity_types_with_capability('searchable');
 	$object_subtypes = elgg_extract('object', $entity_types, []);
 	if ($object_subtypes) {
 		$object_options['subtypes'] = $object_subtypes;
 	}
 
-	$object_results = elgg_trigger_event_results('search', 'object', $object_options, []);
-	$object_entities = elgg_extract('entities', $object_results, []);
+	$object_entities = elgg_search($object_options);
 	if (is_array($object_entities)) {
 		$results = array_merge($results, $object_entities);
 	}
@@ -141,8 +145,8 @@ function elgg_tokeninput_search_all($term, $options = []) {
  */
 function elgg_tokeninput_search_users($term, $options = []) {
 	$options['query'] = $term;
-	$results = elgg_trigger_event_results('search', 'user', $options, []);
-	return elgg_extract('entities', $results, []);
+	$options['type'] = 'user';
+	return elgg_search($options) ?: [];
 }
 
 /**
@@ -154,8 +158,8 @@ function elgg_tokeninput_search_users($term, $options = []) {
  */
 function elgg_tokeninput_search_groups($term, $options = []) {
 	$options['query'] = $term;
-	$results = elgg_trigger_event_results('search', 'group', $options, []);
-	return elgg_extract('entities', $results, []);
+	$options['type'] = 'group';
+	return elgg_search($options) ?: [];
 }
 
 /**
@@ -174,8 +178,7 @@ function elgg_tokeninput_search_objects($term, $options = []) {
 		$options['subtypes'] = $object_subtypes;
 	}
 
-	$results = elgg_trigger_event_results('search', 'object', $options, []);
-	return elgg_extract('entities', $results, []);
+	return elgg_search($options) ?: [];
 }
 
 /**
@@ -210,8 +213,8 @@ function elgg_tokeninput_search_friends($term, $options = []) {
 
 	$options['query'] = $term;
 	$options['guids'] = $friend_guids;
-	$results = elgg_trigger_event_results('search', 'user', $options, []);
-	return elgg_extract('entities', $results, []);
+	$options['type'] = 'user';
+	return elgg_search($options) ?: [];
 }
 
 /**
@@ -233,8 +236,8 @@ function elgg_tokeninput_search_owned_entities($term, $options = []) {
 	$group_options = $options;
 	$group_options['query'] = $term;
 	$group_options['owner_guid'] = $user->guid;
-	$group_results = elgg_trigger_event_results('search', 'group', $group_options, []);
-	$group_entities = elgg_extract('entities', $group_results, []);
+	$group_options['type'] = 'group';
+	$group_entities = elgg_search($group_options) ?: [];
 	if (is_array($group_entities)) {
 		$results = array_merge($results, $group_entities);
 	}
@@ -250,8 +253,8 @@ function elgg_tokeninput_search_owned_entities($term, $options = []) {
 		$object_options['subtypes'] = $object_subtypes;
 	}
 
-	$object_results = elgg_trigger_event_results('search', 'object', $object_options, []);
-	$object_entities = elgg_extract('entities', $object_results, []);
+	$object_options['type'] = 'object';
+	$object_entities = elgg_search($object_options) ?: [];
 	if (is_array($object_entities)) {
 		$results = array_merge($results, $object_entities);
 	}
