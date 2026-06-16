@@ -1,2 +1,2 @@
 <?php
-elgg_import_esm('js/components/tokeninput');
+elgg_import_esm('components/tokeninput');
