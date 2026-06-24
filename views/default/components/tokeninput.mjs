@@ -50,7 +50,7 @@ const tokeninput = {
 		$input.addClass('elgg-state-ready');
 
 		if (params.sortable) {
-			import('jquery-ui/widgets/sortable').then(function () {
+			import('jquery-ui').then(function () {
 				$input.parent().find('.token-input-list').sortable({
 					items: '.token-input-token',
 					connectWith: '.token-input-list',
