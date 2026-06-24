@@ -21,12 +21,6 @@ return [
 		],
 	],
 
-	'views' => [
-		'default' => [
-			'jquery.tokeninput.js' => __DIR__ . '/vendor/bower-asset/jquery-tokeninput/build/jquery.tokeninput.min.js',
-		],
-	],
-
 	'routes' => [
 		'tokeninput' => [
 			'path' => '/tokeninput/{segments}',
