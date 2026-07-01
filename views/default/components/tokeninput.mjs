@@ -1,8 +1,13 @@
 import * as elgg from 'elgg';
 import $ from 'jquery';
 import 'jquery.tokeninput';
-import { trigger } from 'elgg/hooks';
-import { echo } from 'elgg/i18n';
+import hooks from 'elgg/hooks';
+import i18n from 'elgg/i18n';
+
+// elgg/hooks and elgg/i18n are default exports (helpers are methods), not named
+// exports — wrap the methods so existing trigger()/echo() call sites still work.
+const trigger = (...args) => hooks.trigger(...args);
+const echo = (...args) => i18n.echo(...args);
 
 const tokeninput = {
 	/**
@@ -50,7 +55,7 @@ const tokeninput = {
 		$input.addClass('elgg-state-ready');
 
 		if (params.sortable) {
-			import('jquery-ui/widgets/sortable').then(function () {
+			import('jquery-ui').then(function () {
 				$input.parent().find('.token-input-list').sortable({
 					items: '.token-input-token',
 					connectWith: '.token-input-list',

@@ -36,6 +36,12 @@ class Bootstrap extends PluginBootstrap {
 	 * {@inheritdoc}
 	 */
 	public function init() {
+		// jquery.tokeninput is a classic jQuery plugin imported by components/
+		// tokeninput.mjs. It was registered as a 'views' simplecache entry named
+		// 'jquery.tokeninput.js' (.js, not .mjs), which Elgg 7 does NOT add to the
+		// importmap, and the bower-asset file was never installed. Register the
+		// vendored bundle by absolute URL instead (theme exposes window.jQuery).
+		\elgg_register_esm('jquery.tokeninput', \elgg_normalize_url('mod/elgg_tokeninput/vendors/jquery-tokeninput/jquery.tokeninput.min.js'));
 	}
 
 	/**
